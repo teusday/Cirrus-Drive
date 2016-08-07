@@ -183,7 +183,7 @@ Polymer({
             for (var i = this.outbox.length - 1; i >= 0; i--) {
                 if (this.outbox[i].toID == this.user.uid) {
                     this.splice('inbox', 0, 0, this.outbox[i]);
-                    // this.splice('outbox', i, 1);
+                    this.splice('outbox', i, 1);
                 }
             };
         }

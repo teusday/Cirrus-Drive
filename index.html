@@ -1,0 +1,130 @@
+<html>
+
+<head>
+    <title>Cirrus Drive</title>
+    <script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <link rel="icon" href="totally_not_google_drive_recolored.png" type="image/png" sizes="any">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <!-- polymer -->
+    <link rel="import" href="bower_components/polymer/polymer.html">
+    <link rel="import" href="bower_components/font-roboto/roboto.html">
+    <!-- neon animation -->
+    <link rel="import" href="bower_components/neon-animation/neon-shared-element-animatable-behavior.html">
+    <link rel="import" href="bower_components/neon-animation/neon-animations.html">
+    <link rel="import" href="bower_components/neon-animation/neon-animated-pages.html">
+    <link rel="import" href="bower_components/neon-animation/neon-animatable-behavior.html">
+    <link rel="import" href="bower_components/neon-animation/neon-animation-runner-behavior.html">
+    <!-- berry login -->
+    <link rel="import" href="bower_components/berry-login/berry-login.html">
+    <!-- berry circles -->
+    <link rel="import" href="bower_components/berry-circles/berry-circles.html">
+    <!-- berry open close page -->
+    <link rel="import" href="bower_components/berry-open-close-page/berry-open-close-page.html">
+    <!-- berry message page -->
+    <link rel="import" href="bower_components/berry-message-page/berry-message-page.html">
+    <!-- berry open projects -->
+    <link rel="import" href="bower_components/berry-open-projects/berry-open-projects.html">
+    <!-- berry project page -->
+    <link rel="import" href="bower_components/berry-project-page/berry-project-page.html">
+    <style is="custom-style">
+    :root {
+        --primary-color: #03A9F4;
+        --accent-color: #FF4081;
+    }
+    </style>
+</head>
+
+<body class="fullbleed toHome">
+    <template is="dom-bind">
+        <h2 class="title">Cirrus Drive</h2>
+        <neon-animated-pages id="mainPages" selected="[[indexSelect]]">
+            <berry-login id="berry-login" on-login-successful="_loginSuccessful" user="{{user}}"></berry-login>
+            <berry-circles on-circle-click="_circleClick" on-sign-out="_signOut"></berry-circles>
+            <berry-open-close-page id="berry-open-close-page" on-back-click="_backClick" on-open-projects-click="_openProjectsClick" on-closed-projects-click="_closedProjectsClick"></berry-open-close-page>
+            <berry-message-page id="berry-message-page" user="{{user}}" on-back-click="_backClick"></berry-message-page>
+            <berry-open-projects id="berry-open-projects" user="{{user}}" on-open-project-back-click="_openProjectsBackClick" on-open-project-list-click="_openProjectListClick" clickedproject="{{clickedProject}}"></berry-open-projects>
+            <berry-project-page id="berry-project-page" user="{{user}}" project="{{clickedProject}}" on-project-page-back-click="_projectPageBackClick"></berry-project-page>
+        </neon-animated-pages>
+    </template>
+    <script>
+    var scope = document.querySelector('template[is="dom-bind"]');
+    scope.indexSelect = 0;
+    document.addEventListener('WebComponentsReady', function() {
+        document.getElementById('berry-login')._loaded();
+    });
+    scope._loginSuccessful = function() {
+        scope.indexSelect = 1;
+    };
+    scope._circleClick = function(e) {
+        if (e.detail.pageId == "project") {
+            openClosePage = document.getElementById("berry-open-close-page");
+            openClosePage.animationConfig['entry'][0] = {
+                name: 'hero-animation',
+                id: 'hero',
+                toPage: openClosePage
+            }
+            scope.indexSelect = 2;
+        } else if (e.detail.pageId == "message") {
+            messagePage = document.getElementById("berry-message-page");
+            messagePage.animationConfig['entry'][0] = {
+                name: 'hero-animation',
+                id: 'hero',
+                toPage: messagePage
+            }
+            scope.indexSelect = 3;
+        }
+    };
+    scope._backClick = function() {
+        scope.indexSelect = 1;
+    };
+    scope._openProjectsClick = function() {
+        var openPage = document.getElementById('berry-open-projects');
+        openPage.animationConfig['entry'][1] = {
+            name: 'hero-animation',
+            id: 'projectHero',
+            toPage: openPage
+        };
+        openPage.animationConfig['entry'][2] = {
+            name: 'fade-in-animation',
+            node: openPage.$.openProjectList,
+            timing: {
+                delay: 500
+            }
+        };
+        scope.indexSelect = 4;
+    };
+    scope._openProjectsBackClick = function() {
+        var squarePage = document.getElementById('berry-open-close-page');
+        squarePage.animationConfig['entry'][0] = {
+            name: 'slide-from-top-animation',
+            node: squarePage.$.projectHeader
+        }
+        scope.indexSelect = 2;
+    };
+    scope._openProjectListClick = function(e) {
+        scope.indexSelect = 5;
+    };
+    scope._projectPageBackClick = function() {
+        var openPage = document.getElementById('berry-open-projects');
+        openPage.animationConfig['entry'][1] = {
+            name: 'transform-animation',
+            transformFrom: 'translateY(100vh)',
+            node: openPage.$.openProjectPinkContainer
+        };
+        openPage.animationConfig['entry'][2] = {
+
+        };
+        scope.indexSelect = 4;
+    };
+    scope._closedProjectsClick = function() {
+        scope.indexSelect = 4;
+    };
+    scope._signOut = function() {
+        var loginPage = document.getElementById('berry-login');
+        loginPage.signOut();
+        scope.indexSelect = 0;
+    }
+    </script>
+</body>
+
+</html>

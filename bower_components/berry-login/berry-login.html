@@ -1,0 +1,94 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../neon-animation/neon-shared-element-animatable-behavior.html">
+<link rel="import" href="../neon-animation/neon-animatable-behavior.html">
+<link rel="import" href="../neon-animation/neon-animation-runner-behavior.html">
+<link rel="import" href="../polymerfire/polymerfire.html">
+<link rel="import" href="../paper-button/paper-button.html">
+<dom-module id="berry-login">
+    <style>
+    :host {
+        visibility: hidden;
+    }
+    
+    .flex-horizontal {
+        @apply(--layout-horizontal);
+        @apply(--layout-center-center);
+    }
+    
+    #loginButton {
+        background-color: var(--primary-color);
+        color: white;
+    }
+    </style>
+    <template>
+        <firebase-app auth-domain="cirrus-drive.firebaseapp.com" database-url="https://cirrus-drive.firebaseio.com" api-key="AIzaSyCPV6dYhyQI5ia5CtLmwemfv6MFL9zZf_Y"></firebase-app>
+        <firebase-auth id="auth" user="{{user}}" provider="google" on-error "handleError" signedIn="{{signedIn}}"></firebase-auth>
+        <div class="flex-horizontal">
+            <paper-button id="loginButton" on-click="_login" raised>Sign In</paper-button>
+        </div>
+    </template>
+</dom-module>
+<script>
+Polymer({
+    is: "berry-login",
+    behaviors: [
+        Polymer.NeonSharedElementAnimatableBehavior,
+        Polymer.NeonAnimatableBehavior,
+        Polymer.NeonAnimationRunnerBehavior
+    ],
+    properties: {
+        user: {
+            type: Object,
+            notify: true,
+            observer: "_signedInObserver"
+        },
+        animationConfig: {
+            type: Object,
+            value: function() {
+                var button = this.$.loginButton;
+                return {
+                    'exit': [{
+                        name: 'fade-out-animation',
+                        node: button
+                    }],
+                    'login-load': [{
+                        name: 'fade-in-animation',
+                        node: button,
+                        timing: {
+                            delay: 300
+                        }
+                    }]
+                }
+            }
+        }
+    },
+    _loaded: function() {
+        this.style.visibility = 'visible';
+        this.playAnimation("login-load");
+    },
+    _login: function() {
+        this.$.auth.signInWithPopup()
+            .then(function(response) {
+                // successful authentication response here
+                // this.fire("login-successful");
+                console.log("successful");
+            })
+            .catch(function(error) {
+                // unsuccessful authentication response here
+                console.log("unsuccessful");
+            });
+    },
+    _signedInObserver: function(newValue, oldValue) {
+        if (this.$.auth.signedIn == true) {
+            this.fire("login-successful");
+            console.log("logged in");
+        } else {
+            console.log("not logged in");
+        }
+    },
+    signOut: function() {
+        this.$.auth.signOut();
+    }
+});
+</script>

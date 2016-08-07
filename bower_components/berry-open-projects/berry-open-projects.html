@@ -1,0 +1,163 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../neon-animation/neon-shared-element-animatable-behavior.html">
+<link rel="import" href="../neon-animation/neon-animations.html">
+<link rel="import" href="../neon-animation/neon-animated-pages.html">
+<link rel="import" href="../neon-animation/neon-animatable-behavior.html">
+<link rel="import" href="../neon-animation/neon-animation-runner-behavior.html">
+<link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../paper-listbox/paper-listbox.html">
+<link rel="import" href="../paper-item/paper-item.html">
+<link rel="import" href="../polymerfire/polymerfire.html">
+<link rel="import" href="../paper-spinner/paper-spinner.html">
+<dom-module id="berry-open-projects">
+    <style>
+    .flex-horizontal {
+        @apply(--layout-horizontal);
+    }
+    
+    .flexchild {
+        @apply(--layout-flex);
+    }
+    
+    #openProjectHeader {
+        position: relative;
+        left: -8px;
+        width: 101.5%;
+        top: -180px;
+        height: 200px;
+        background-color: var(--primary-color);
+        color: white;
+        @apply(--layout-horizontal);
+        @apply(--layout-center-center);
+        font-size: 25pt;
+    }
+    
+    #backButton {
+        position: absolute;
+        left: 10px;
+        top: 10px;
+        color: #FFFFFF;
+    }
+    
+    #openProjectContent {
+        position: absolute;
+        left: 0px;
+        right: 0px;
+        top: 90px;
+        @apply(--layout-horizontal);
+        @apply(--layout-center-center);
+    }
+    
+    #openProjectPinkContainer {
+        color: white;
+        background-color: var(--accent-color);
+        max-width: 800px;
+        width: 100%;
+        height: 100%;
+        margin: 10px;
+    }
+    
+    #openProjectPinkContainer paper-listbox {
+        margin: 10px;
+    }
+    
+    div[secondary] {
+        font-size: 10pt;
+        color: gray;
+    }
+    </style>
+    <template>
+        <firebase-document id="getOpenProjects" path="/projects/[[user.uid]]/open" data="{{openProjects}}"></firebase-document>
+        <div id="openProjectHeader">
+            <paper-icon-button id="backButton" icon="arrow-back" on-click="_openProjectBackClick"></paper-icon-button>
+            <h1 id="openProjectTitle">Open Projects</h1>
+        </div>
+        <div id="openProjectContent">
+            <div id="openProjectPinkContainer">
+                <paper-listbox id="openProjectList">
+                    <template is="dom-repeat" items="[[openProjects]]" as="project" sort="_sortOpenProjects">
+                        <paper-item on-click="_openProjectListClick" role="menuitem" class="flex-horizontal">
+                            <paper-item-body two-line class="flexchild">
+                                <div>[[project.name]]</div>
+                                <div secondary>[[project.startDate]]</div>
+                            </paper-item-body>
+                            <iron-icon icon="info"></iron-icon>
+                        </paper-item>
+                    </template>
+                </paper-listbox>
+            </div>
+        </div>
+    </template>
+</dom-module>
+<script>
+Polymer({
+    is: "berry-open-projects",
+    behaviors: [
+        Polymer.NeonSharedElementAnimatableBehavior
+    ],
+    properties: {
+        user: {
+            type: Object,
+            notify: true
+        },
+        openProjects: {
+            type: Array
+        },
+        clickedproject: {
+            type: String,
+            notify: true
+        },
+        sharedElements: {
+            value: function() {
+                return {
+                    'projectHero': this.$.openProjectPinkContainer
+                }
+            }
+        },
+        animationConfig: {
+            type: Object,
+            value: function() {
+                return {
+                    'entry': [{
+                        name: 'slide-from-top-animation',
+                        node: this.$.openProjectHeader
+                    }, {
+                        name: 'hero-animation',
+                        id: 'projectHero',
+                        toPage: this
+                    }, {
+                        name: 'fade-in-animation',
+                        node: this.$.openProjectList,
+                        timing: {
+                            delay: 500
+                        }
+                    }],
+                    'exit': [{
+                        name: 'transform-animation',
+                        transformTo: 'translateY(100vh)',
+                        node: this.$.openProjectContent
+                    }, {
+                        name: 'transform-animation',
+                        transformTo: 'translateY(-30vh)',
+                        node: this.$.openProjectHeader
+                    }]
+                }
+            }
+        }
+    },
+    _openProjectBackClick: function() {
+        this.fire("open-project-back-click");
+    },
+    _openProjectListClick: function(e) {
+        this.clickedproject = e.model.__data__.project;
+        console.log(this.clickedproject);
+        this.fire("open-project-list-click");
+    },
+    _sortOpenProjects: function(a, b) {
+        //sort
+    }
+});
+</script>

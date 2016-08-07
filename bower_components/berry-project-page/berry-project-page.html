@@ -1,0 +1,220 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../neon-animation/neon-shared-element-animatable-behavior.html">
+<link rel="import" href="../neon-animation/neon-animations.html">
+<link rel="import" href="../neon-animation/neon-animated-pages.html">
+<link rel="import" href="../neon-animation/neon-animatable-behavior.html">
+<link rel="import" href="../neon-animation/neon-animation-runner-behavior.html">
+<link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../paper-listbox/paper-listbox.html">
+<link rel="import" href="../paper-item/paper-item.html">
+<link rel="import" href="../paper-header-panel/paper-header-panel.html">
+<link rel="import" href="../paper-dialog/paper-dialog.html">
+<dom-module id="berry-project-page">
+    <style>
+    .flex-horizontal {
+        @apply(--layout-horizontal);
+    }
+    
+    .flex-center {
+        @apply(--layout-center-center);
+    }
+    
+    .flex-wrap {
+        @apply(--layout-horizontal);
+        @apply(--layout-wrap);
+    }
+    
+    .flexchild {
+        @apply(--layout-flex);
+    }
+    
+    .paper-header {
+        position: fixed;
+        left: 0px;
+        width: 100%;
+        top: 0px;
+        height: 200px;
+        background-color: var(--primary-color);
+        font-size: 50pt;
+        font-weight: bold;
+        color: white;
+    }
+    
+    .container {
+        position: fixed;
+        top: 200px;
+        bottom: 0;
+        padding: 20px;
+        overflow-y: auto;
+    }
+    
+    #backButton {
+        position: absolute;
+        left: 10px;
+        top: 10px;
+        color: #FFFFFF;
+    }
+    
+    .projectPinkContainer {
+        display: inline-block;
+        color: white;
+        background-color: var(--accent-color);
+        max-width: 60%;
+        margin: 10px;
+        padding: 10px;
+    }
+    
+    .projectPinkContainer div {
+        color: black;
+        background-color: white;
+        display: inline-block;
+        padding: 10px;
+        font-size: 25pt;
+    }
+    
+    paper-item-body {
+        font-size: 15pt;
+        line-height: 20px;
+        padding-right: 20px;
+    }
+    
+    p[secondary] {
+        font-size: 10pt;
+        color: gray;
+    }
+    
+    paper-dialog li {
+        margin: 5px 20px;
+    }
+    </style>
+    <template>
+        <paper-header-panel mode="seamed">
+            <div class="paper-header flex-center flex-horizontal" id="projectHeader">
+                <paper-icon-button id="backButton" icon="arrow-back" on-click="_projectBackClick"></paper-icon-button>[[project.name]]</div>
+            <div class="flex-center flex-wrap container">
+                <div class="projectPinkContainer">
+                    <div>
+                        <b>Driving Question: </b><span>[[project.drivingQuestion]]</span>
+                    </div>
+                </div>
+                <div class="projectPinkContainer">
+                    <div>
+                        <b>Proposed Credits: </b><span>[[project.proprosedCredits]]</span>
+                    </div>
+                </div>
+                <div class="projectPinkContainer">
+                    <div>
+                        <b>Start and End Date: </b><span>[[project.startDate]] - [[project.endDate]]</span>
+                    </div>
+                </div>
+                <div class="projectPinkContainer">
+                    <div>
+                        <b>Standards:</b>
+                        <paper-listbox>
+                            <template is="dom-repeat" items="[[project.standards]]" as="standard">
+                                <paper-item role="menuitem" class="flex-horizontal" on-click="_showStandardInfo">
+                                    <paper-item-body two-line class="flexchild">
+                                        <p>[[standard.name]]</p>
+                                        <p secondary>Credits: <span>[[standard.credit]]</span>
+                                        </p>
+                                    </paper-item-body>
+                                    <iron-icon icon="info"></iron-icon>
+                                </paper-item>
+                            </template>
+                        </paper-listbox>
+                    </div>
+                </div>
+            </div>
+        </paper-header-panel>
+        <paper-dialog id="standardInfoDialog" style="background-color: [[_subjectColor(standardClicked.subject)]]" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
+            <h2>[[standardClicked.name]]</h2>
+            <ul>
+                <template is="dom-repeat" items="[[standardClicked.description]]" as="description">
+                    <li>[[description]]</li>
+                </template>
+            </ul>
+        </paper-dialog>
+    </template>
+</dom-module>
+<script>
+Polymer({
+    is: "berry-project-page",
+    behaviors: [
+        Polymer.NeonAnimatableBehavior
+    ],
+    properties: {
+        standardClicked: {
+            type: Object
+        },
+        user: {
+            type: Object,
+            notify: true
+        },
+        project: {
+            type: String,
+            notify: true
+        },
+        animationConfig: {
+            type: Object,
+            value: function() {
+                return {
+                    'entry': [{
+                        name: 'slide-from-top-animation',
+                        node: this.$.projectHeader
+                    }, {
+                        name: 'cascaded-animation',
+                        animation: 'transform-animation',
+                        transformFrom: 'translateY(100vh)',
+                        nodes: Polymer.dom(this.root).querySelectorAll(".projectPinkContainer")
+                    }],
+                    'exit': [{
+                        name: 'transform-animation',
+                        transformTo: 'translateY(-30vh)',
+                        node: this.$.projectHeader
+                    }, {
+                        name: 'cascaded-animation',
+                        animation: 'transform-animation',
+                        transformTo: 'translateY(100vh)',
+                        nodes: Polymer.dom(this.root).querySelectorAll(".projectPinkContainer")
+                    }]
+                }
+            }
+        }
+    },
+    _projectBackClick: function() {
+        this.fire("project-page-back-click");
+    },
+    _projectURL: function(projectstatus, projectid, property) {
+        if (property != null) {
+            return "https://cirrus-drive.firebaseio.com/users/berrste/projects/" + projectstatus + "/" + projectid + "/" + property;
+        } else {
+            return "https://cirrus-drive.firebaseio.com/users/berrste/projects/" + projectstatus + "/" + projectid;
+        }
+    },
+    _subjectColor: function(subject) {
+        if (subject == "english") {
+            return "#F44336";
+        } else if (subject == "socialStudies") {
+            return "#FFEB3B";
+        } else if (subject == "science") {
+            return "#4CAF50";
+        } else if (subject == "math") {
+            return "#2196F3";
+        } else if (subject == "elective") {
+            return "#8460c5";
+        } else {
+            return "white";
+        }
+    },
+    _showStandardInfo: function(e) {
+        this.standardClicked = e.model.__data__.standard;
+        this.$.standardInfoDialog.open();
+    },
+    arrayItem: function(change, index, path) {
+        return this.get(path, change.base[index]);
+    }
+});
+</script>

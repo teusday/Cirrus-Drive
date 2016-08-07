@@ -1,0 +1,138 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../neon-animation/neon-shared-element-animatable-behavior.html">
+<link rel="import" href="../neon-animation/neon-animatable-behavior.html">
+<link rel="import" href="../neon-animation/neon-animation-runner-behavior.html">
+<link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../paper-button/paper-button.html">
+<dom-module id="berry-circles">
+    <style>
+    :host {
+        height: 500px;
+    }
+    
+    #circleBox {
+        @apply(--layout-fit);
+        @apply(--layout-horizontal);
+        @apply(--layout-center-center);
+    }
+    
+    .circle {
+        display: inline-block;
+        width: 100px;
+        height: 100px;
+        margin: 16px;
+        border-radius: 50%;
+        background: var(--primary-color);
+        color: #FFFFFF;
+        text-align: center;
+        padding: 1%;
+    }
+    
+    .circle iron-icon {
+        padding-top: 18%;
+    }
+    
+    #signOutButton {
+        color: var(--primary-color);
+        position: fixed;
+        top: 40px;
+        right: 40px;
+    }
+    </style>
+    <template>
+        <paper-button id="signOutButton" on-click="_signOut">Sign Out</paper-button>
+        <div id="circleBox">
+            <div id="projectCircle" class="circle" on-click="_projectsClick">
+                <iron-icon icon="assignment"></iron-icon>
+                <p>Projects</p>
+            </div>
+            <div id="messageCircle" class="circle" on-click="_messagesClick">
+                <iron-icon icon="mail"></iron-icon>
+                <p>Messages</p>
+            </div>
+            <div id="taskCircle" class="circle" on-click="_tasksClick">
+                <iron-icon icon="done"></iron-icon>
+                <p>Tasks</p>
+            </div>
+        </div>
+    </template>
+</dom-module>
+<script>
+Polymer({
+    is: "berry-circles",
+    behaviors: [
+        Polymer.NeonSharedElementAnimatableBehavior,
+        Polymer.NeonAnimatableBehavior,
+        Polymer.NeonAnimationRunnerBehavior
+    ],
+    properties: {
+        animationConfig: {
+            type: Object,
+            value: function() {
+                var circles = Polymer.dom(this.root).querySelectorAll('.circle');
+                var circlesArray = Array.prototype.slice.call(circles);
+                return {
+                    'entry': [{
+                        name: 'cascaded-animation',
+                        animation: 'scale-up-animation',
+                        nodes: circlesArray,
+                        timing: {
+                            delay: 200
+                        }
+                    }, {
+                        name: 'fade-in-animation',
+                        node: this.$.signOutButton,
+                        timing: {
+                            delay: 1000
+                        }
+                    }],
+                    'exit': [{
+                        name: 'hero-animation',
+                        id: 'hero',
+                        fromPage: this
+                    }, {
+                        name: 'cascaded-animation',
+                        animation: 'scale-down-animation'
+                    }]
+                }
+            }
+        }
+    },
+    _projectsClick: function() {
+        this._assignAnimationToCircle(this.$.projectCircle);
+        this.fire("circle-click", {
+            pageId: "project"
+        });
+    },
+    _messagesClick: function() {
+        this._assignAnimationToCircle(this.$.messageCircle);
+        this.fire("circle-click", {
+            pageId: "message"
+        });
+    },
+    _tasksClick: function() {
+        this._assignAnimationToCircle(this.$.taskCircle);
+        this.fire("circle-click", {
+            pageId: "task"
+        });
+    },
+    _assignAnimationToCircle: function(target) {
+        var nodesToScale = [];
+        this.sharedElements = {
+            'hero': target
+        };
+        var circles = Polymer.dom(this.root).querySelectorAll('.circle');
+        for (var i = circles.length - 1; i >= 0; i--) {
+            if (circles[i] != target) {
+                nodesToScale.push(circles[i]);
+            }
+        }
+        this.animationConfig['exit'][1].nodes = nodesToScale;
+    },
+    _signOut: function() {
+        this.fire("sign-out");
+    }
+});
+</script>

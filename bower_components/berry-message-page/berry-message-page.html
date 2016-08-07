@@ -184,7 +184,7 @@ Polymer({
                 if (this.outbox[i].toID == this.user.uid) {
                     this.splice('messageData', 0, 0, this.outbox[i]);
                     console.log(this.messageData);
-                    // this.splice('outbox', i, 1);
+                    this.splice('outbox', i, 1);
                 }
             };
         }

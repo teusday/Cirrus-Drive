@@ -1,5 +1,5 @@
 # ReadMe
-## Or Don't, whatever.
+## Or don't, whatever.
 
 **To-Do:**
 - Change all the headers to paper-headers

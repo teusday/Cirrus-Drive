@@ -11,6 +11,7 @@
 <link rel="import" href="../paper-button/paper-button.html">
 <link rel="import" href="../paper-spinner/paper-spinner.html">
 <link rel="import" href="../polymerfire/polymerfire.html">
+<link rel="import" href="../iron-ajax/iron-ajax.html">
 <dom-module id="berry-message-page">
     <style>
     .flex-horizontal {
@@ -87,7 +88,7 @@
     </style>
     <template>
         <firebase-document id="getInbox" path="/messages/[[user.uid]]/inbox" data="{{inbox}}"></firebase-document>
-        <firebase-document id="getOutbox" data="{{outbox}}" path="/messages/outbox"></firebase-document>
+        <iron-ajax id="sendAjax" url="../berry-fire-interface/berry-fire-send-message.php" handle-as="text" on-response="_handleSendResponse" verbose="true" method="POST"></iron-ajax>
         <paper-header-panel mode="seamed">
             <div class="paper-header flex-center flex-horizontal" id="messageHeader">
                 <paper-icon-button id="backButton" icon="arrow-back" on-click="_backClick"></paper-icon-button>
@@ -97,12 +98,12 @@
                 <div id="messagesContent">
                     <div id="messagesPinkContainer">
                         <paper-listbox id="messagesList">
-                            <template is="dom-repeat" items="[[inbox]]" as="message">
+                            <template is="dom-repeat" items="[[_toArray(inbox)]]" as="message">
                                 <!-- don't forget to sort it by date and time -->
                                 <paper-item role="menuitem" class="flex-horizontal" on-click="_messageClick">
                                     <paper-item-body two-line class="flexchild">
-                                        <div>[[message.subject]]</div>
-                                        <div secondary>[[message.fromName]]</div>
+                                        <div>[[message.value.subject]]</div>
+                                        <div secondary>[[message.value.fromName]]</div>
                                     </paper-item-body>
                                     <iron-icon icon="info"></iron-icon>
                                 </paper-item>
@@ -129,11 +130,8 @@ Polymer({
         Polymer.NeonSharedElementAnimatableBehavior
     ],
     properties: {
-        outbox: {
-            type: Array
-        },
         inbox: {
-            type: Array
+            type: Object
         },
         user: {
             type: Object,
@@ -175,28 +173,36 @@ Polymer({
             }
         }
     },
-    observers: [
-        'updateInboxOutbox(inbox, outbox)'
-    ],
-    updateInboxOutbox: function(inbox, outbox) {
-        if (!this.$.getOutbox.valueIsEmpty(inbox) && !this.$.getOutbox.valueIsEmpty(outbox)) {
-            for (var i = this.outbox.length - 1; i >= 0; i--) {
-                if (this.outbox[i].toID == this.user.uid) {
-                    this.splice('inbox', 0, 0, this.outbox[i]);
-                    this.splice('outbox', i, 1);
-                }
+    _toArray: function(inbox) {
+        console.log(Object.keys(inbox).map(function(key) {
+            return {
+                name: key,
+                value: inbox[key]
             };
-        }
+        }));
+        return Object.keys(inbox).map(function(key) {
+            return {
+                name: key,
+                value: inbox[key]
+            };
+        });
     },
     _backClick: function() {
         this.fire("back-click");
     },
     _messageClick: function(e) {
-        this.clickedMessage = e.model.__data__.message;
+        this.clickedMessage = e.model.__data__.message.value;
         this.$.messageInfoDialog.open();
     },
     _sendMessage: function(data) {
-        this.push('outbox', data);
+        this.$.sendAjax.params = {
+            "messageData": JSON.stringify(data),
+            "auth": JSON.stringify(this.user)
+        };
+        this.$.sendAjax.generateRequest();
+    },
+    _handleSendResponse: function() {
+        console.log(this.$.sendAjax.lastResponse);
     },
     _replyClick: function() {
         var recipientID = this.clickedMessage.fromID;

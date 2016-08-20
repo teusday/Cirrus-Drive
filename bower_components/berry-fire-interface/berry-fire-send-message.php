@@ -2,27 +2,54 @@
 $global = new stdClass();
 $auth = json_decode($_REQUEST["auth"]);
 $messageData = json_decode($_REQUEST["messageData"]);
-
 $options = array('auth' => $auth);
-
 initCurlHandler();
-setBaseURI("https://cirrus-drive.firebaseio.com/messages");
-var_dump(writeData(getPathFromMessageData($messageData), $messageData, "POST", $options));
+setBaseURI("https://cirrus-drive.firebaseio.com");
+$users = json_decode(get("users", $options));
+$id = idExists($messageData->toID, $users);
+if ($id != "null") {
+    $result = json_decode(writeData(getPathFromMessageData($id), $messageData, "POST", $options));
+    if ($result->error) {
+        echo "error";
+    } else {
+        echo "success";
+    }
+} else {
+    echo "user error";
+}
+
+function idExists($check, $users) {
+    $returnMe = "null";
+    foreach($users as $key => $value) {
+        if ($key == $check || $value->username == $check || $value->fullName == $check) {
+            $returnMe = $key;
+        }
+    }
+    return $returnMe;
+}
 
 function initCurlHandler() {
         $GLOBALS['global']->_curlHandler = curl_init();
-    }
+}
 
-function closeCurlHandler()
-    {
+function closeCurlHandler() {
         curl_close($GLOBALS['global']->_curlHandler);
-    }
+}
 
-function setBaseURI($baseURI)
-    {
+function setBaseURI($baseURI) {
         $baseURI .= (substr($baseURI, -1) == '/' ? '' : '/');
         $GLOBALS['global']->_baseURI = $baseURI;
-    }
+}
+
+function get($path, $options = array()) {
+        try {
+            $ch = _getCurlHandler($path, 'GET', $options);
+            $return = curl_exec($ch);
+        } catch (Exception $e) {
+            $return = null;
+        }
+        return $return;
+}
 
 function writeData($path, $data, $method = 'POST', $options = array()) {
         $jsonData = json_encode($data);
@@ -39,10 +66,10 @@ function writeData($path, $data, $method = 'POST', $options = array()) {
             $return = null;
         }
         return $return;
-    }
+}
 
-function getPathFromMessageData($messageData) {
-	return $messageData->toID . "/inbox";
+function getPathFromMessageData($id) {
+	return "messages/" . $id . "/inbox";
 }
 
 function _getJsonPath($path, $options = array()) {

@@ -102,7 +102,7 @@
                                 <!-- don't forget to sort it by date and time -->
                                 <paper-item role="menuitem" class="flex-horizontal" on-click="_messageClick">
                                     <paper-item-body two-line class="flexchild">
-                                        <div>[[message.value.subject]]</div>
+                                        <div><template is="dom-if" if="[[message.value.reply]]">Re: </template>[[message.value.subject]]</div>
                                         <div secondary>[[message.value.fromName]]</div>
                                     </paper-item-body>
                                     <iron-icon icon="info"></iron-icon>
@@ -114,7 +114,7 @@
             </div>
         </paper-header-panel>
         <paper-dialog id="messageInfoDialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
-            <h2>Subject: [[clickedMessage.subject]]</h2>
+            <h2>Subject: <template is="dom-if" if="[[clickedMessage.reply]]">Re: </template>[[clickedMessage.subject]]</h2>
             <p><b>From:</b> [[clickedMessage.fromName]]</p>
             <p><b>Sent Timestamp:</b> [[clickedMessage.date]] [[clickedMessage.time]]</p>
             <p><b>Message:</b> [[clickedMessage.value]]</p>

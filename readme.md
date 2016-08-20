@@ -5,8 +5,8 @@
 - Change all the headers to paper-headers
 - Messages
   - ~~make reply work~~
-  - create _new message_ button
-  - create _new message_ screen
+  - ~~create _new message_ button~~
+  - ~~create _new message_ screen~~
   - add _no messages_ screen
 - Projects
   - make _closed projects_ page

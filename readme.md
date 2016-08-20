@@ -4,7 +4,7 @@
 **To-Do:**
 - Change all the headers to paper-headers
 - Messages
-  x make reply work
+  - ~~make reply work~~
   - create _new message_ button
   - create _new message_ screen
 - Projects

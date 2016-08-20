@@ -8,9 +8,12 @@
 <link rel="import" href="../paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../paper-header-panel/paper-header-panel.html">
 <link rel="import" href="../paper-input/paper-input.html">
+<link rel="import" href="../papre-input/papre-textarea.html">
 <link rel="import" href="../paper-button/paper-button.html">
 <link rel="import" href="../paper-spinner/paper-spinner.html">
+<link rel="import" href="../paper-fab/paper-fab.html">
 <link rel="import" href="../polymerfire/polymerfire.html">
+<link rel="import" href="../iron-ajax/iron-ajax.html">
 <dom-module id="berry-message-page">
     <style>
     .flex-horizontal {
@@ -30,6 +33,12 @@
         left: 10px;
         top: 10px;
         color: #FFFFFF;
+    }
+    
+    #messageFab {
+        position: absolute;
+        right: 50px;
+        bottom: -20px;
     }
     
     .paper-header {
@@ -87,22 +96,24 @@
     </style>
     <template>
         <firebase-document id="getInbox" path="/messages/[[user.uid]]/inbox" data="{{inbox}}"></firebase-document>
-        <firebase-document id="getOutbox" data="{{outbox}}" path="/messages/outbox"></firebase-document>
+        <iron-ajax id="sendAjax" url="../berry-fire-interface/berry-fire-send-message.php" handle-as="text" on-response="_handleSendResponse" verbose="true" method="POST"></iron-ajax>
         <paper-header-panel mode="seamed">
             <div class="paper-header flex-center flex-horizontal" id="messageHeader">
                 <paper-icon-button id="backButton" icon="arrow-back" on-click="_backClick"></paper-icon-button>
+                <paper-fab mini id="messageFab" icon="add" title="add" on-click="_openComposeDialog"></paper-fab>
                 Messages
             </div>
             <div class="flex-center flex-horizontal container">
                 <div id="messagesContent">
                     <div id="messagesPinkContainer">
                         <paper-listbox id="messagesList">
-                            <template is="dom-repeat" items="[[inbox]]" as="message">
+                            <template is="dom-repeat" items="[[_toArray(inbox)]]" as="message">
                                 <!-- don't forget to sort it by date and time -->
                                 <paper-item role="menuitem" class="flex-horizontal" on-click="_messageClick">
                                     <paper-item-body two-line class="flexchild">
-                                        <div>[[message.subject]]</div>
-                                        <div secondary>[[message.fromName]]</div>
+                                        <div>
+                                            <template is="dom-if" if="[[message.value.reply]]">Re: </template>[[message.value.subject]]</div>
+                                        <div secondary>[[message.value.fromName]]</div>
                                     </paper-item-body>
                                     <iron-icon icon="info"></iron-icon>
                                 </paper-item>
@@ -113,12 +124,25 @@
             </div>
         </paper-header-panel>
         <paper-dialog id="messageInfoDialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
-            <h2>Subject: [[clickedMessage.subject]]</h2>
+            <h2>Subject: <template is="dom-if" if="[[clickedMessage.reply]]">Re: </template>[[clickedMessage.subject]]</h2>
             <p><b>From:</b> [[clickedMessage.fromName]]</p>
             <p><b>Sent Timestamp:</b> [[clickedMessage.date]] [[clickedMessage.time]]</p>
             <p><b>Message:</b> [[clickedMessage.value]]</p>
             <paper-input label="reply" id="replyInput"></paper-input>
-            <paper-button on-click="_replyClick">Send</paper-button>
+            <div>
+                <paper-button on-click="_replyClick" id="replyButton">Send</paper-button>
+                <paper-spinner id="replySpinner"></paper-spinner>
+            </div>
+        </paper-dialog>
+        <paper-dialog id="composeDialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
+            <h2>Compose Message</h2>
+            <paper-input label="to" id="toInput"></paper-input>
+            <paper-input label="subject" id="subjectInput"></paper-input>
+            <paper-input label="message" id="messageInput"></paper-input>
+            <div>
+                <paper-button on-click="_composeClick" id="composeButton">Send</paper-button>
+                <paper-spinner id="composeSpinner"></paper-spinner>
+            </div>
         </paper-dialog>
     </template>
 </dom-module>
@@ -129,11 +153,8 @@ Polymer({
         Polymer.NeonSharedElementAnimatableBehavior
     ],
     properties: {
-        outbox: {
-            type: Array
-        },
         inbox: {
-            type: Array
+            type: Object
         },
         user: {
             type: Object,
@@ -161,6 +182,12 @@ Polymer({
                         name: 'transform-animation',
                         transformFrom: 'translateY(100vh)',
                         node: this.$.messagesPinkContainer
+                    }, {
+                        name: 'scale-up-animation',
+                        node: this.$.messageFab,
+                        timing: {
+                            delay: 300
+                        }
                     }],
                     'exit': [{
                         name: 'transform-animation',
@@ -170,35 +197,102 @@ Polymer({
                         name: 'transform-animation',
                         transformTo: 'translateY(-30vh)',
                         node: this.$.messageHeader
+                    }, {
+                        name: 'scale-down-animation',
+                        node: this.$.messageFab
                     }]
                 }
             }
         }
     },
-    observers: [
-        'updateInboxOutbox(inbox, outbox)'
-    ],
-    updateInboxOutbox: function(inbox, outbox) {
-        if (!this.$.getOutbox.valueIsEmpty(inbox) && !this.$.getOutbox.valueIsEmpty(outbox)) {
-            for (var i = this.outbox.length - 1; i >= 0; i--) {
-                if (this.outbox[i].toID == this.user.uid) {
-                    this.splice('inbox', 0, 0, this.outbox[i]);
-                    this.splice('outbox', i, 1);
-                }
+    _toArray: function(inbox) {
+        return Object.keys(inbox).map(function(key) {
+            return {
+                name: key,
+                value: inbox[key]
             };
-        }
+        });
     },
     _backClick: function() {
         this.fire("back-click");
     },
     _messageClick: function(e) {
-        this.clickedMessage = e.model.__data__.message;
+        this.clickedMessage = e.model.__data__.message.value;
         this.$.messageInfoDialog.open();
     },
     _sendMessage: function(data) {
-        this.push('outbox', data);
+        this.$.sendAjax.params = {
+            "messageData": JSON.stringify(data),
+            "auth": JSON.stringify(this.user)
+        };
+        this.$.sendAjax.generateRequest();
+    },
+    _handleSendResponse: function() {
+        if (this.$.sendAjax.lastResponse == "success") {
+            this.sendData = {};
+            this.$.messageInfoDialog.close();
+            this.$.composeDialog.close();
+            this.$.replyInput.value = "";
+            this.$.toInput.value = "";
+            this.$.subjectInput.value = "";
+            this.$.messageInput.value = "";
+            this.$.replyInput.disabled = false;
+            this.$.toInput.disabled = false;
+            this.$.subjectInput.disabled = false;
+            this.$.messageInput.disabled = false;
+            this.$.composeButton.disabled = false;
+            this.$.replySpinner.active = false;
+            this.$.composeSpinner.active = false;
+        } else {
+            this.$.replyInput.disabled = false;
+            this.$.toInput.disabled = false;
+            this.$.subjectInput.disabled = false;
+            this.$.messageInput.disabled = false;
+            this.$.composeButton.disabled = false;
+            this.$.replySpinner.active = false;
+            this.$.composeSpinner.active = false;
+            if (this.$.sendAjax.lastResponse == "user error") {
+                console.log("user doesn't exist");
+            } else {
+                console.log("unknown error");
+            }
+        }
+    },
+    _openComposeDialog: function() {
+        this.$.composeDialog.open();
+    },
+    _composeClick: function() {
+        this.$.toInput.disabled = true;
+        this.$.subjectInput.disabled = true;
+        this.$.messageInput.disabled = true;
+        this.$.composeButton.disabled = true;
+        this.$.composeSpinner.active = true;
+        var recipientID = this.$.toInput.value;
+        var subject = this.$.subjectInput.value;
+        var message = this.$.messageInput.value;
+        var fromID = this.user.uid;
+        var fromName = this.user.displayName;
+        var reply = false;
+        var currentDate = new Date();
+        //TODO: use firebase timestamp
+        var date = (currentDate.getMonth() + 1) + "/" + currentDate.getDate() + "/" + currentDate.getFullYear();
+        var time = currentDate.getHours() + ":" + currentDate.getMinutes();
+        var data = {
+            'date': date,
+            'fromID': fromID,
+            'fromName': fromName,
+            'reply': reply,
+            'subject': subject,
+            'time': time,
+            'toID': recipientID,
+            'value': message
+        };
+        this._sendMessage(data);
     },
     _replyClick: function() {
+        this.$.replyInput.disabled = true;
+        this.$.replyButton.disabled = true;
+        this.$.replySpinner.active = true;
         var recipientID = this.clickedMessage.fromID;
         var subject = this.clickedMessage.subject;
         var message = this.$.replyInput.value;
@@ -220,9 +314,6 @@ Polymer({
             'value': message
         };
         this._sendMessage(data);
-        this.sendData = {};
-        this.$.messageInfoDialog.close();
-        this.$.replyInput.value = "";
     }
 });
 </script>

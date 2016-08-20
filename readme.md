@@ -4,9 +4,10 @@
 **To-Do:**
 - Change all the headers to paper-headers
 - Messages
-  - make reply work
-  - create _new message_ button
-  - create _new message_ screen
+  - ~~make reply work~~
+  - ~~create _new message_ button~~
+  - ~~create _new message_ screen~~
+  - add _no messages_ screen
 - Projects
   - make _closed projects_ page
   - make button to submit, edit, and delete a project

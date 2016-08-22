@@ -46,7 +46,7 @@
             <berry-message-page id="berry-message-page" user="{{user}}" on-back-click="_backClick"></berry-message-page>
             <berry-open-projects id="berry-open-projects" user="{{user}}" on-open-project-back-click="_openProjectsBackClick" on-open-project-list-click="_openProjectListClick" clickedproject="{{clickedProject}}"></berry-open-projects>
             <berry-project-page id="berry-project-page" user="{{user}}" project="{{clickedProject}}" on-project-page-back-click="_projectPageBackClick"></berry-project-page>
-            <berry-advisor-page id="berry-advisor-page" user="{{user}}" on-back-click="_backClick" on-open-projects-click="_openProjectsClick" on-closed-projects-click="_closedProjectsClick"></berry-advisor-page>
+            <berry-advisor-page id="berry-advisor-page" user="{{user}}" on-back-click="_backClick" student-overview-click="_studentOverveiwClick"></berry-advisor-page>
         </neon-animated-pages>
     </template>
     <script>
@@ -134,6 +134,9 @@
     scope._closedProjectsClick = function() {
         scope.indexSelect = 4;
     };
+    scope._studentOverviewClick = function() {
+        scope.indexSelect=7
+    }
     scope._signOut = function() {
         var loginPage = document.getElementById('berry-login');
         loginPage.signOut();

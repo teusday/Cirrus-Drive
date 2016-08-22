@@ -67,13 +67,13 @@
             <div class="paper-header flex-center flex-horizontal" id="projectHeader">
             	<paper-icon-button id="backButton" icon="arrow-back" on-click="_backClick"></paper-icon-button>Advisor Panel</div>
             <div class="flex-center flex-horizontal container">
-            	<div class="square" id="openProjectsSquare" on-click="_openProjectSquareClick">
-                    <iron-icon icon="assignment"></iron-icon>
-                    <br>Open Projects
+            	<div class="square" id="studentOverviewSquare" on-click="_studentOverviewSquareClick">
+                    <iron-icon icon="supervisor-account"></iron-icon>
+                    <br>Student Overview
                 </div>
-                <div class="square" id="closedProjectsSquare" on-click="_closedProjectSquareClick">
-                    <iron-icon icon="assignment-turned-in"></iron-icon>
-                    <br>Closed Projects
+                <div class="square" id="otherStuffSquare" on-click="_otherStuffSquareClick">
+                    <iron-icon icon="hourglass-empty"></iron-icon>
+                    <br>Other Stuff
                 </div>
             </div>
         </paper-header-panel>
@@ -134,31 +134,21 @@ Polymer({
         }];
         this.fire("back-click");
     },
-    _openProjectSquareClick: function() {
+    __studentOverviewSquareClick: function() {
         this.animationConfig['exit'][0] = {
             name: 'scale-down-animation',
-            node: document.getElementById('closedProjectsSquare')
+            node: document.getElementById('studentOverviewSquare')
         };
         this.animationConfig['exit'].push({
             name: 'hero-animation',
             id: 'projectHero',
             fromPage: this
         });
-        this.sharedElements['projectHero'] = document.getElementById('openProjectsSquare');
-        this.fire("open-projects-click");
+        this.sharedElements['projectHero'] = document.getElementById('studentOverviewSquare');
+        this.fire("student-overview-click");
     },
-    _closedProjectSquareClick: function() {
-        this.animationConfig['exit'][0] = {
-            name: 'scale-down-animation',
-            node: document.getElementById('openProjectsSquare')
-        };
-        this.animationConfig['exit'].push({
-            name: 'hero-animation',
-            id: 'projectHero',
-            fromPage: this
-        });
-        this.sharedElements['projectHero'] = document.getElementById('closedProjectsSquare');
-        this.fire("closed-projects-click");
+    _otherStuffSquareClick: function() {
+        
     }
 });
 </script>

@@ -58,11 +58,19 @@
                 <p>Tasks</p>
             </div>
             <template is="dom-if" if="{{userIsAdvisor}}">
-                <div id="taskCircle" class="circle" on-click="_tasksClick">
+                <div id="taskCircle" class="circle" on-click="_advisorClick">
                     <iron-icon icon="work"></iron-icon>
                     <p>Advisor</p>
                 </div>
             </template>
+            
+            <!--This is so I can test because I am neither an admin or an advisor-->
+            
+            <div id="advisorCircle" class="circle" on-click="_advisorClick">
+                <iron-icon icon="work"></iron-icon>
+                <p>Advisor</p>
+            </div>
+            
         </div>
     </template>
 </dom-module>
@@ -128,6 +136,12 @@ Polymer({
         this.fire("circle-click", {
             pageId: "task"
         });
+    },
+    _advisorClick: function() {
+      this._assignAnimationToCircle(this.$.advisorCircle);  
+      this.fire("circle-click",{
+          pageId: "advisor"
+      });
     },
     _assignAnimationToCircle: function(target) {
         var nodesToScale = [];

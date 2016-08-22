@@ -94,6 +94,10 @@
         width: 50%;
     }
     
+    #messageDeleteButton {
+        color: red;
+    }
+
     #composeUserError {
         color: red;
     }
@@ -137,9 +141,11 @@
             <p><b>Sent Timestamp:</b> [[clickedMessage.date]] [[clickedMessage.time]]</p>
             <p><b>Message:</b> [[clickedMessage.value]]</p>
             <paper-input label="reply" id="replyInput"></paper-input>
-            <div>
+            <div class="flex-horizontal">
                 <paper-button on-click="_replyClick" id="replyButton">Send</paper-button>
                 <paper-spinner id="replySpinner"></paper-spinner>
+                <span class="flexchild"></span>
+                <paper-button id="messageDeleteButton" on-click="_deleteMessage">Delete</paper-button>
             </div>
         </paper-dialog>
         <paper-dialog id="composeDialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
@@ -229,6 +235,7 @@ Polymer({
         this.fire("back-click");
     },
     _messageClick: function(e) {
+        this.clickedName = e.model.__data__.message.name;
         this.clickedMessage = e.model.__data__.message.value;
         this.$.messageInfoDialog.open();
     },
@@ -332,6 +339,10 @@ Polymer({
             'value': message
         };
         this._sendMessage(data);
+    },
+    _deleteMessage: function() {
+        this.set('inbox.' + this.clickedName, null);
+        this.$.messageInfoDialog.close();
     }
 });
 </script>

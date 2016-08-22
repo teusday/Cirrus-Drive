@@ -56,22 +56,25 @@
         scope.indexSelect = 1;
     };
     scope._circleClick = function(e) {
-        if (e.detail.pageId == "project") {
-            openClosePage = document.getElementById("berry-open-close-page");
-            openClosePage.animationConfig['entry'][0] = {
-                name: 'hero-animation',
-                id: 'hero',
-                toPage: openClosePage
-            }
-            scope.indexSelect = 2;
-        } else if (e.detail.pageId == "message") {
-            messagePage = document.getElementById("berry-message-page");
-            messagePage.animationConfig['entry'][0] = {
-                name: 'hero-animation',
-                id: 'hero',
-                toPage: messagePage
-            }
-            scope.indexSelect = 3;
+        switch(e.detail.pageId) {
+            case "project" :
+                openClosePage = document.getElementById("berry-open-close-page");
+                openClosePage.animationConfig['entry'][0] = {
+                    name: 'hero-animation',
+                    id: 'hero',
+                    toPage: openClosePage
+                }
+                scope.indexSelect = 2;
+                break;
+            case "message" :
+                messagePage = document.getElementById("berry-message-page");
+                messagePage.animationConfig['entry'][0] = {
+                    name: 'hero-animation',
+                    id: 'hero',
+                    toPage: messagePage
+                }
+                scope.indexSelect = 3;
+                break;
         }
     };
     scope._backClick = function() {

@@ -42,6 +42,7 @@
     }
     </style>
     <template>
+        <firebase-document id="isAdvisor" path="/users/[[user.uid]]/advisor" data="{{userIsAdvisor}}"></firebase-document>
         <paper-button id="signOutButton" on-click="_signOut">Sign Out</paper-button>
         <div id="circleBox">
             <div id="projectCircle" class="circle" on-click="_projectsClick">
@@ -56,6 +57,12 @@
                 <iron-icon icon="done"></iron-icon>
                 <p>Tasks</p>
             </div>
+            <template is="dom-if" if="{{userIsAdvisor}}">
+                <div id="taskCircle" class="circle" on-click="_tasksClick">
+                    <iron-icon icon="work"></iron-icon>
+                    <p>Advisor</p>
+                </div>
+            </template>
         </div>
     </template>
 </dom-module>
@@ -98,6 +105,10 @@ Polymer({
                     }]
                 }
             }
+        },
+        
+        userIsAdvisor: {
+            type: Boolean
         }
     },
     _projectsClick: function() {

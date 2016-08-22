@@ -26,6 +26,8 @@
     <link rel="import" href="bower_components/berry-open-projects/berry-open-projects.html">
     <!-- berry project page -->
     <link rel="import" href="bower_components/berry-project-page/berry-project-page.html">
+    <!--berry advisor page-->
+    <link rel="import" href="bower_components/berry-advisor-page/berry-advisor-page.html">
     <style is="custom-style">
     :root {
         --primary-color: #03A9F4;
@@ -44,6 +46,7 @@
             <berry-message-page id="berry-message-page" user="{{user}}" on-back-click="_backClick"></berry-message-page>
             <berry-open-projects id="berry-open-projects" user="{{user}}" on-open-project-back-click="_openProjectsBackClick" on-open-project-list-click="_openProjectListClick" clickedproject="{{clickedProject}}"></berry-open-projects>
             <berry-project-page id="berry-project-page" user="{{user}}" project="{{clickedProject}}" on-project-page-back-click="_projectPageBackClick"></berry-project-page>
+            <berry-advisor-page id="berry-advisor-page" user="{{user}}" on-back-click="_backClick" on-open-projects-click="_openProjectsClick" on-closed-projects-click="_closedProjectsClick"></berry-advisor-page>
         </neon-animated-pages>
     </template>
     <script>
@@ -74,6 +77,15 @@
                     toPage: messagePage
                 }
                 scope.indexSelect = 3;
+                break;
+            case "advisor" :
+                advisorPage = document.getElementById("berry-advisor-page");
+                advisorPage.animationConfig['entry'][0] = {
+                    name: 'hero-animation',
+                    id: 'hero',
+                    toPage: advisorPage
+                }
+                scope.indexSelect = 6;
                 break;
         }
     };

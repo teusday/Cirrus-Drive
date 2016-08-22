@@ -2,7 +2,7 @@
 ## Or don't, whatever.
 
 **To-Do:**
-- Change all the headers to paper-headers
+- ~~Change all the headers to paper-headers~~
 - Messages
   - ~~make reply work~~
   - ~~create _new message_ button~~

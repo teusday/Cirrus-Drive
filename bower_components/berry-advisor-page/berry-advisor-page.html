@@ -7,148 +7,151 @@
 <link rel="import" href="../iron-icons/iron-icons.html">
 <link rel="import" href="../paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../paper-header-panel/paper-header-panel.html">
+<link rel="import" href="../polymerfire/polymerfire.html">
 <dom-module id="berry-advisor-page">
     <style>
-    .flex-horizontal {
-        @apply(--layout-horizontal);
-    }
-    
-    .flexchild {
-        @apply(--layout-flex);
-    }
+        .flex-horizontal {
+            @apply(--layout-horizontal);
+        }
 
-    .flex-center {
-        @apply(--layout-center-center);
-    }
+        .flexchild {
+            @apply(--layout-flex);
+        }
 
-    #backButton {
-        position: absolute;
-        left: 10px;
-        top: 10px;
-        color: #FFFFFF;
-    }
+        .flex-center {
+            @apply(--layout-center-center);
+        }
 
-    .paper-header {
-        position: fixed;
-        left: 0px;
-        width: 100%;
-        top: 0px;
-        height: 200px;
-        background-color: var(--primary-color);
-        font-size: 50pt;
-        font-weight: bold;
-        color: white;
-    }
+        #backButton {
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            color: #FFFFFF;
+        }
 
-    .container {
-        position: fixed;
-        top: 200px;
-        left: 0px;
-        right: 0px;
-        bottom: 0px;
-        padding: 20px;
-        overflow-y: auto;
-    }
+        .paper-header {
+            position: fixed;
+            left: 0px;
+            width: 100%;
+            top: 0px;
+            height: 200px;
+            background-color: var(--primary-color);
+            font-size: 50pt;
+            font-weight: bold;
+            color: white;
+        }
 
-    .square {
-        width: 150px;
-        height: 150px;
-        margin: 50px;
-        background: var(--accent-color);
-        color: #FFFFFF;
-        padding: 30px;
-        @apply(--layout-vertical);
-        @apply(--layout-center-center);
-    }
+        .container {
+            position: fixed;
+            top: 200px;
+            left: 0px;
+            right: 0px;
+            bottom: 0px;
+            padding: 20px;
+            overflow-y: auto;
+        }
 
+        .square {
+            width: 150px;
+            height: 150px;
+            margin: 50px;
+            background: var(--accent-color);
+            color: #FFFFFF;
+            padding: 30px;
+            @apply(--layout-vertical);
+            @apply(--layout-center-center);
+        }
     </style>
     <template>
-    	<paper-header-panel mode="seamed">
-            <div class="paper-header flex-center flex-horizontal" id="projectHeader">
-            	<paper-icon-button id="backButton" icon="arrow-back" on-click="_backClick"></paper-icon-button>Advisor Panel</div>
-            <div class="flex-center flex-horizontal container">
-            	<div class="square" id="studentOverviewSquare" on-click="_studentOverviewSquareClick">
-                    <iron-icon icon="supervisor-account"></iron-icon>
-                    <br>Student Overview
+        <firebase-document id="isAdvisor" path="/users/[[user.uid]]/advisor" data="{{userIsAdvisor}}"></firebase-document>
+        <template is="dom-if" if="{{userIsAdvisor}}">
+            <paper-header-panel mode="seamed">
+                <div class="paper-header flex-center flex-horizontal" id="projectHeader">
+                    <paper-icon-button id="backButton" icon="arrow-back" on-click="_backClick"></paper-icon-button>Advisor Panel</div>
+                <div class="flex-center flex-horizontal container">
+                    <div class="square" id="studentOverviewSquare" on-click="_studentOverviewSquareClick">
+                        <iron-icon icon="supervisor-account"></iron-icon>
+                        <br>Student Overview
+                    </div>
+                    <div class="square" id="otherStuffSquare" on-click="_otherStuffSquareClick">
+                        <iron-icon icon="hourglass-empty"></iron-icon>
+                        <br>Other Stuff
+                    </div>
                 </div>
-                <div class="square" id="otherStuffSquare" on-click="_otherStuffSquareClick">
-                    <iron-icon icon="hourglass-empty"></iron-icon>
-                    <br>Other Stuff
-                </div>
-            </div>
-        </paper-header-panel>
+            </paper-header-panel>
+        </template>
     </template>
 </dom-module>
 <script>
-Polymer({
-    is: "berry-advisor-page",
-    behaviors: [
-        Polymer.NeonSharedElementAnimatableBehavior
-    ],
-    properties: {
-    	sharedElements: {
-            value: function() {
-                return {
-                    'hero': this.$.projectHeader,
-                    'projectHero': this.$.openProjectsSquare
+    Polymer({
+        is: "berry-advisor-page",
+        behaviors: [
+            Polymer.NeonSharedElementAnimatableBehavior
+        ],
+        properties: {
+            sharedElements: {
+                value: function() {
+                    return {
+                        'hero': this.$.projectHeader,
+                        'projectHero': this.$.openProjectsSquare
+                    }
+                }
+            },
+            animationConfig: {
+                type: Object,
+                value: function() {
+                    return {
+                        'entry': [{
+                            name: 'hero-animation',
+                            id: 'hero',
+                            toPage: this
+                        }, {
+                            name: 'cascaded-animation',
+                            animation: 'transform-animation',
+                            transformFrom: 'translateY(100vh)',
+                            nodes: Polymer.dom(this.root).querySelectorAll(".square")
+                        }],
+                        'exit': [{
+                            name: 'cascaded-animation',
+                            animation: 'transform-animation',
+                            transformTo: 'translateY(100vh)'
+                        }, {
+                            name: 'transform-animation',
+                            transformTo: 'translateY(-30vh)',
+                            node: this.$.projectHeader
+                        }]
+                    }
                 }
             }
         },
-        animationConfig: {
-            type: Object,
-            value: function() {
-                return {
-                    'entry': [{
-                        name: 'hero-animation',
-                        id: 'hero',
-                        toPage: this
-                    }, {
-                        name: 'cascaded-animation',
-                        animation: 'transform-animation',
-                        transformFrom: 'translateY(100vh)',
-                        nodes: Polymer.dom(this.root).querySelectorAll(".square")
-                    }],
-                    'exit': [{
-                        name: 'cascaded-animation',
-                        animation: 'transform-animation',
-                        transformTo: 'translateY(100vh)'
-                    }, {
-                        name: 'transform-animation',
-                        transformTo: 'translateY(-30vh)',
-                        node: this.$.projectHeader
-                    }]
-                }
-            }
+        _backClick: function() {
+            this.animationConfig['exit'] = [{
+                name: 'cascaded-animation',
+                animation: 'transform-animation',
+                transformTo: 'translateY(100vh)',
+                nodes: Polymer.dom(this.root).querySelectorAll(".square")
+            }, {
+                name: 'transform-animation',
+                transformTo: 'translateY(-30vh)',
+                node: this.$.projectHeader
+            }];
+            this.fire("back-click");
+        },
+        __studentOverviewSquareClick: function() {
+            this.animationConfig['exit'][0] = {
+                name: 'scale-down-animation',
+                node: document.getElementById('studentOverviewSquare')
+            };
+            this.animationConfig['exit'].push({
+                name: 'hero-animation',
+                id: 'projectHero',
+                fromPage: this
+            });
+            this.sharedElements['projectHero'] = document.getElementById('studentOverviewSquare');
+            this.fire("student-overview-click");
+        },
+        _otherStuffSquareClick: function() {
+
         }
-    },
-    _backClick: function() {
-        this.animationConfig['exit'] = [{
-            name: 'cascaded-animation',
-            animation: 'transform-animation',
-            transformTo: 'translateY(100vh)',
-            nodes: Polymer.dom(this.root).querySelectorAll(".square")
-        }, {
-            name: 'transform-animation',
-            transformTo: 'translateY(-30vh)',
-            node: this.$.projectHeader
-        }];
-        this.fire("back-click");
-    },
-    __studentOverviewSquareClick: function() {
-        this.animationConfig['exit'][0] = {
-            name: 'scale-down-animation',
-            node: document.getElementById('studentOverviewSquare')
-        };
-        this.animationConfig['exit'].push({
-            name: 'hero-animation',
-            id: 'projectHero',
-            fromPage: this
-        });
-        this.sharedElements['projectHero'] = document.getElementById('studentOverviewSquare');
-        this.fire("student-overview-click");
-    },
-    _otherStuffSquareClick: function() {
-        
-    }
-});
+    });
 </script>

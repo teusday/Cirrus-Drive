@@ -17,5 +17,6 @@
   - figure out what a task page needs
 - Advisor Page
   - generate transcripts and stuff
+  - page to look at project requests
 - Connect to Google Drive
 - Set up routing, so a browser back takes you back

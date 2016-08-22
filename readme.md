@@ -18,3 +18,4 @@
 - Advisor Page
   - generate transcripts and stuff
 - Connect to Google Drive
+- Set up routing, so a browser back takes you back

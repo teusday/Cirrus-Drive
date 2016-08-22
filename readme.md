@@ -2,7 +2,7 @@
 ## Or don't, whatever.
 
 **To-Do:**
-- Change all the headers to paper-headers
+- ~~Change all the headers to paper-headers~~
 - Messages
   - ~~make reply work~~
   - ~~create _new message_ button~~
@@ -18,3 +18,4 @@
 - Advisor Page
   - generate transcripts and stuff
 - Connect to Google Drive
+- Set up routing, so a browser back takes you back

@@ -16,18 +16,18 @@
     .flexchild {
         @apply(--layout-flex);
     }
-
+    
     .flex-center {
         @apply(--layout-center-center);
     }
-
+    
     #backButton {
         position: absolute;
         left: 10px;
         top: 10px;
         color: #FFFFFF;
     }
-
+    
     .paper-header {
         position: fixed;
         left: 0px;
@@ -39,7 +39,7 @@
         font-weight: bold;
         color: white;
     }
-
+    
     .container {
         position: fixed;
         top: 200px;
@@ -49,7 +49,7 @@
         padding: 20px;
         overflow-y: auto;
     }
-
+    
     .square {
         width: 150px;
         height: 150px;
@@ -60,14 +60,13 @@
         @apply(--layout-vertical);
         @apply(--layout-center-center);
     }
-
     </style>
     <template>
-    	<paper-header-panel mode="seamed">
+        <paper-header-panel mode="seamed">
             <div class="paper-header flex-center flex-horizontal" id="projectHeader">
-            	<paper-icon-button id="backButton" icon="arrow-back" on-click="_backClick"></paper-icon-button>Projects</div>
+                <paper-icon-button id="backButton" icon="arrow-back" on-click="_backClick"></paper-icon-button>Projects</div>
             <div class="flex-center flex-horizontal container">
-            	<div class="square" id="openProjectsSquare" on-click="_openProjectSquareClick">
+                <div class="square" id="openProjectsSquare" on-click="_openProjectSquareClick">
                     <iron-icon icon="assignment"></iron-icon>
                     <br>Open Projects
                 </div>
@@ -90,7 +89,7 @@ Polymer({
         Polymer.NeonSharedElementAnimatableBehavior
     ],
     properties: {
-    	sharedElements: {
+        sharedElements: {
             value: function() {
                 return {
                     'hero': this.$.projectHeader,
@@ -139,9 +138,17 @@ Polymer({
         this.fire("back-click");
     },
     _openProjectSquareClick: function() {
+        var nodesToScale = [];
+        var squares = Polymer.dom(this.root).querySelectorAll('.square');
+        for (var i = squares.length - 1; i >= 0; i--) {
+            if (squares[i] != document.getElementById('openProjectsSquare')) {
+                nodesToScale.push(squares[i]);
+            }
+        }
         this.animationConfig['exit'][0] = {
-            name: 'scale-down-animation',
-            node: document.getElementById('closedProjectsSquare')
+            name: 'cascaded-animation',
+            animation: 'scale-down-animation',
+            nodes: nodesToScale
         };
         this.animationConfig['exit'].push({
             name: 'hero-animation',
@@ -152,17 +159,46 @@ Polymer({
         this.fire("open-projects-click");
     },
     _closedProjectSquareClick: function() {
+        var nodesToScale = [];
+        var squares = Polymer.dom(this.root).querySelectorAll('.square');
+        for (var i = squares.length - 1; i >= 0; i--) {
+            if (squares[i] != document.getElementById('closedProjectsSquare')) {
+                nodesToScale.push(squares[i]);
+            }
+        }
         this.animationConfig['exit'][0] = {
-            name: 'scale-down-animation',
-            node: document.getElementById('openProjectsSquare')
+            name: 'cascaded-animation',
+            animation: 'scale-down-animation',
+            nodes: nodesToScale
+        };
+        this.animationConfig['exit'][1] = {
+            name: 'hero-animation',
+            id: 'projectHero',
+            fromPage: this
+        };
+        this.sharedElements['projectHero'] = document.getElementById('closedProjectsSquare');
+        this.fire("closed-projects-click");
+    },
+    _requestProjectSquareClick: function() {
+        var nodesToScale = [];
+        var squares = Polymer.dom(this.root).querySelectorAll('.square');
+        for (var i = squares.length - 1; i >= 0; i--) {
+            if (squares[i] != document.getElementById('requestProjectsSquare')) {
+                nodesToScale.push(squares[i]);
+            }
+        }
+        this.animationConfig['exit'][0] = {
+            name: 'cascaded-animation',
+            animation: 'scale-down-animation',
+            nodes: nodesToScale
         };
         this.animationConfig['exit'].push({
             name: 'hero-animation',
             id: 'projectHero',
             fromPage: this
         });
-        this.sharedElements['projectHero'] = document.getElementById('closedProjectsSquare');
-        this.fire("closed-projects-click");
+        this.sharedElements['projectHero'] = document.getElementById('requestProjectSquare');
+        this.fire("requested-projects-click");
     }
 });
 </script>

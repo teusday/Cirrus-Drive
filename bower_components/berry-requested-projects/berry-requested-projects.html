@@ -13,7 +13,7 @@
 <link rel="import" href="../paper-item/paper-item.html">
 <link rel="import" href="../polymerfire/polymerfire.html">
 <link rel="import" href="../paper-spinner/paper-spinner.html">
-<dom-module id="berry-open-projects">
+<dom-module id="berry-requested-projects">
     <style>
         .flex-horizontal {
             @apply(--layout-horizontal);
@@ -56,7 +56,7 @@
             overflow-y: auto;
         }
         
-        #openProjectContent {
+        #requestedProjectContent {
             position: absolute;
             left: 0px;
             right: 0px;
@@ -65,7 +65,7 @@
             @apply(--layout-center-center);
         }
         
-        #openProjectPinkContainer {
+        #requestedProjectPinkContainer {
             color: white;
             background-color: var(--accent-color);
             max-width: 800px;
@@ -74,7 +74,7 @@
             margin: 10px;
         }
         
-        #openProjectPinkContainer paper-listbox {
+        #requestedProjectPinkContainer paper-listbox {
             margin: 10px;
         }
         
@@ -85,18 +85,18 @@
 
     </style>
     <template>
-        <firebase-document id="getOpenProjects" path="/projects/[[user.uid]]/open" data="{{openProjects}}"></firebase-document>
+        <firebase-document id="getRequestedProjects" path="/projects/[[user.uid]]/requested" data="{{requestedProjects}}"></firebase-document>
         <paper-header-panel mode="seamed">
-            <div class="paper-header flex-center flex-horizontal" id="openProjectHeader">
-                <paper-icon-button id="backButton" icon="arrow-back" on-click="_openProjectBackClick"></paper-icon-button>
-                Open Projects
+            <div class="paper-header flex-center flex-horizontal" id="requestedProjectHeader">
+                <paper-icon-button id="backButton" icon="arrow-back" on-click="_requestedProjectBackClick"></paper-icon-button>
+                Requested Projects
             </div>
             <div class="flex-center flex-horizontal container">
-                <div id="openProjectContent">
-                    <div id="openProjectPinkContainer">
-                        <paper-listbox id="openProjectList">
-                            <template is="dom-repeat" items="[[openProjects]]" as="project" sort="_sortOpenProjects">
-                                <paper-item on-click="_openProjectListClick" role="menuitem" class="flex-horizontal">
+                <div id="requestedProjectContent">
+                    <div id="requestedProjectPinkContainer">
+                        <paper-listbox id="requestedProjectList">
+                            <template is="dom-repeat" items="[[requestedProjects]]" as="project" sort="_sortrequestedProjects">
+                                <paper-item on-click="_requestedProjectListClick" role="menuitem" class="flex-horizontal">
                                     <paper-item-body two-line class="flexchild">
                                         <div>[[project.name]]</div>
                                         <div secondary>[[project.startDate]]</div>
@@ -113,7 +113,7 @@
 </dom-module>
 <script>
     Polymer({
-        is: "berry-open-projects",
+        is: "berry-requested-projects",
         behaviors: [
             Polymer.NeonSharedElementAnimatableBehavior
         ],
@@ -122,7 +122,7 @@
                 type: Object,
                 notify: true
             },
-            openProjects: {
+            requestedProjects: {
                 type: Array
             },
             clickedproject: {
@@ -132,7 +132,7 @@
             sharedElements: {
                 value: function() {
                     return {
-                        'projectHero': this.$.openProjectPinkContainer
+                        'projectHero': this.$.requestedProjectPinkContainer
                     }
                 }
             },
@@ -142,14 +142,14 @@
                     return {
                         'entry': [{
                             name: 'slide-from-top-animation',
-                            node: this.$.openProjectHeader
+                            node: this.$.requestedProjectHeader
                         }, {
                             name: 'hero-animation',
                             id: 'projectHero',
                             toPage: this
                         }, {
                             name: 'fade-in-animation',
-                            node: this.$.openProjectList,
+                            node: this.$.requestedProjectList,
                             timing: {
                                 delay: 500
                             }
@@ -157,24 +157,24 @@
                         'exit': [{
                             name: 'transform-animation',
                             transformTo: 'translateY(100vh)',
-                            node: this.$.openProjectContent
+                            node: this.$.requestedProjectContent
                         }, {
                             name: 'transform-animation',
                             transformTo: 'translateY(-30vh)',
-                            node: this.$.openProjectHeader
+                            node: this.$.requestedProjectHeader
                         }]
                     }
                 }
             }
         },
-        _openProjectBackClick: function() {
-            this.fire("open-project-back-click");
+        _requestedProjectBackClick: function() {
+            this.fire("requested-project-back-click");
         },
-        _openProjectListClick: function(e) {
+        _requestedProjectListClick: function(e) {
             this.clickedproject = e.model.__data__.project;
-            this.fire("open-project-list-click");
+            this.fire("requested-project-list-click");
         },
-        _sortOpenProjects: function(a, b) {
+        _sortRequestedProjects: function(a, b) {
             //sort
         }
     });

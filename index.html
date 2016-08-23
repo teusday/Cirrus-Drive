@@ -26,6 +26,8 @@
     <link rel="import" href="bower_components/berry-open-projects/berry-open-projects.html">
     <!-- berry project page -->
     <link rel="import" href="bower_components/berry-project-page/berry-project-page.html">
+    <!-- berry requested projects -->
+    <link rel="import" href="bower_components/berry-requested-projects/berry-requested-projects.html">
     <style is="custom-style">
     :root {
         --primary-color: #03A9F4;
@@ -40,10 +42,11 @@
         <neon-animated-pages id="mainPages" selected="[[indexSelect]]">
             <berry-login id="berry-login" on-login-successful="_loginSuccessful" user="{{user}}"></berry-login>
             <berry-circles on-circle-click="_circleClick" on-sign-out="_signOut"></berry-circles>
-            <berry-open-close-page id="berry-open-close-page" on-back-click="_backClick" on-open-projects-click="_openProjectsClick" on-closed-projects-click="_closedProjectsClick"></berry-open-close-page>
+            <berry-open-close-page id="berry-open-close-page" on-back-click="_backClick" on-open-projects-click="_openProjectsClick" on-closed-projects-click="_closedProjectsClick" on-requested-projects-click="_requestedProjectsClick"></berry-open-close-page>
             <berry-message-page id="berry-message-page" user="{{user}}" on-back-click="_backClick"></berry-message-page>
             <berry-open-projects id="berry-open-projects" user="{{user}}" on-open-project-back-click="_openProjectsBackClick" on-open-project-list-click="_openProjectListClick" clickedproject="{{clickedProject}}"></berry-open-projects>
             <berry-project-page id="berry-project-page" user="{{user}}" project="{{clickedProject}}" on-project-page-back-click="_projectPageBackClick"></berry-project-page>
+            <berry-requested-projects on-requested-project-back-click="_requestedProjectsBackClick"></berry-requested-projects>
         </neon-animated-pages>
     </template>
     <script>
@@ -122,6 +125,17 @@
     scope._closedProjectsClick = function() {
         scope.indexSelect = 4;
     };
+    scope._requestedProjectsClick = function() {
+        scope.indexSelect = 6;
+    };
+    scope._requestedProjectsBackClick = function() {
+        var squarePage = document.getElementById('berry-open-close-page');
+        squarePage.animationConfig['entry'][0] = {
+            name: 'slide-from-top-animation',
+            node: squarePage.$.projectHeader
+        }
+        scope.indexSelect = 2;
+    }
     scope._signOut = function() {
         var loginPage = document.getElementById('berry-login');
         loginPage.signOut();

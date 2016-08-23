@@ -22,5 +22,6 @@
 - Advisor Page
   - generate transcripts and stuff
   - page to look at project requests
+  - change advisor icon back to something less mean (eventually)
 - Connect to Google Drive
 - Set up routing, so a browser back takes you back

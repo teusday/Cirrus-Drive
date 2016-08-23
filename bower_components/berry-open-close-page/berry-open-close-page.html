@@ -171,11 +171,11 @@ Polymer({
             animation: 'scale-down-animation',
             nodes: nodesToScale
         };
-        this.animationConfig['exit'][1] = {
+        this.animationConfig['exit'].push({
             name: 'hero-animation',
             id: 'projectHero',
             fromPage: this
-        };
+        });
         this.sharedElements['projectHero'] = document.getElementById('closedProjectsSquare');
         this.fire("closed-projects-click");
     },

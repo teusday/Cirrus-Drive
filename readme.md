@@ -13,6 +13,10 @@
 - Projects
   - make _closed projects_ page
   - make button to submit, edit, and delete a project
+  - make a _requested projects_ page
+  	- test and make sure it works
+  -	make a _new project_ button
+  - make a _new project_ screen
 - Task Page
   - figure out what a task page needs
 - Advisor Page

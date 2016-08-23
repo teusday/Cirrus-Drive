@@ -91,9 +91,10 @@
         properties: {
             sharedElements: {
                 value: function() {
+                    console.log(this.$$("#projectHeader"));
                     return {
-                        'hero': this.$.projectHeader,
-                        'projectHero': this.$.openProjectsSquare
+                        'hero': this.$$("#projectHeader"),
+                        'projectHero': this.$$("#openProjectsSquare")
                     }
                 }
             },
@@ -118,7 +119,7 @@
                         }, {
                             name: 'transform-animation',
                             transformTo: 'translateY(-30vh)',
-                            node: this.$.projectHeader
+                            node: this.$$('#projectHeader')
                         }]
                     }
                 }
@@ -133,7 +134,7 @@
             }, {
                 name: 'transform-animation',
                 transformTo: 'translateY(-30vh)',
-                node: this.$.projectHeader
+                node: this.$$("#projectHeader")
             }];
             this.fire("back-click");
         },

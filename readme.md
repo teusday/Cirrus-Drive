@@ -17,10 +17,14 @@
   	- test and make sure it works
   -	make a _new project_ button
   - make a _new project_ screen
+  - make a _no projects_ screen for all three categories
 - Task Page
   - figure out what a task page needs
 - Advisor Page
+  - make it so that the advisor circle shows up when you're an advisor
   - generate transcripts and stuff
   - page to look at project requests
+  - change advisor icon back to something less mean (eventually)
 - Connect to Google Drive
 - Set up routing, so a browser back takes you back
+- Mobile version could use work

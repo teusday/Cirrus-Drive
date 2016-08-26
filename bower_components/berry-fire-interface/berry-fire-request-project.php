@@ -1,35 +1,21 @@
 <?php
 $global = new stdClass();
 $auth = json_decode($_REQUEST["auth"]);
-$messageData = json_decode($_REQUEST["messageData"]);
+$projectData = json_decode($_REQUEST["projectData"]);
 $options = array('auth' => $auth);
 initCurlHandler();
 setBaseURI("https://cirrus-drive.firebaseio.com");
-$users = json_decode(get("users", $options));
-$id = idExists($messageData->toID, $users);
-if ($id != "null") {
-    $result = json_decode(writeData(getPathFromMessageData($id), $messageData, "POST", $options));
-    if ($result->error) {
-        echo "error";
-    } else {
-        echo "success";
-    }
+$id = $auth->uid;
+$result = json_decode(writeData(getPath($id), $projectData, "POST", $options));
+if ($result->error) {
+	echo $result->error;
 } else {
-    echo "user error";
+	echo "success";
 }
 
-function getPathFromMessageData($id) {
-    return "messages/" . $id . "/inbox";
-}
 
-function idExists($check, $users) {
-    $returnMe = "null";
-    foreach($users as $key => $value) {
-        if ($key == $check || $value->username == $check || $value->fullName == $check) {
-            $returnMe = $key;
-        }
-    }
-    return $returnMe;
+function getPath($id) {
+	return "requests/" . $id . "/";
 }
 
 ////////////////////////////////////////
@@ -97,7 +83,4 @@ function _getCurlHandler($path, $mode, $options = array()) {
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         return $ch;
     }
-
-
-
 ?>

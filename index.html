@@ -51,7 +51,7 @@
             <berry-open-projects id="berry-open-projects" user="{{user}}" on-open-project-back-click="_openProjectsBackClick" on-open-project-list-click="_openProjectListClick" clickedproject="{{clickedProject}}"></berry-open-projects>
             <berry-project-page id="berry-project-page" user="{{user}}" project="{{clickedProject}}" on-project-page-back-click="_projectPageBackClick"></berry-project-page>
             <berry-requested-projects on-requested-project-back-click="_requestedProjectsBackClick"></berry-requested-projects>
-            <berry-new-project id="berry-new-project" on-new-project-back-click="_newProjectBackClick"></berry-new-project>
+            <berry-new-project id="berry-new-project" user="{{user}}" on-new-project-back-click="_newProjectBackClick"></berry-new-project>
             <berry-advisor-page id="berry-advisor-page" user="{{user}}" on-back-click="_backClick" student-overview-click="_studentOverveiwClick"></berry-advisor-page>
         </neon-animated-pages>
     </template>

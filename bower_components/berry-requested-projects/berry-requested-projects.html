@@ -85,7 +85,7 @@
 
     </style>
     <template>
-        <firebase-document id="getRequestedProjects" path="/projects/[[user.uid]]/requested" data="{{requestedProjects}}"></firebase-document>
+        <firebase-document id="getRequestedProjects" path="/requests/[[user.uid]]" data="{{requestedProjects}}"></firebase-document>
         <paper-header-panel mode="seamed">
             <div class="paper-header flex-center flex-horizontal" id="requestedProjectHeader">
                 <paper-icon-button id="backButton" icon="arrow-back" on-click="_requestedProjectBackClick"></paper-icon-button>

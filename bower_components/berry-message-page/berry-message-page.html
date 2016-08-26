@@ -108,7 +108,7 @@
     </style>
     <template>
         <firebase-document id="getInbox" path="/messages/[[user.uid]]/inbox" data="{{inbox}}"></firebase-document>
-        <iron-ajax id="sendAjax" url="../berry-fire-interface/berry-fire-send-message.php" handle-as="text" on-response="_handleSendResponse" verbose="true" method="POST"></iron-ajax>
+        <iron-ajax id="sendAjax" url="../berry-fire-interface/berry-fire-send-message.php" handle-as="text" on-response="_handleSendResponse" method="POST"></iron-ajax>
         <paper-header-panel mode="seamed">
             <div class="paper-header flex-center flex-horizontal" id="messageHeader">
                 <paper-icon-button id="backButton" icon="arrow-back" on-click="_backClick"></paper-icon-button>

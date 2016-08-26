@@ -131,11 +131,16 @@
         </paper-header-panel>
         <paper-dialog id="standardInfoDialog" style="background-color: [[_subjectColor(standardClicked.subject)]]" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
             <h2>[[standardClicked.name]]</h2>
-            <ul>
-                <template is="dom-repeat" items="[[standardClicked.description]]" as="description">
-                    <li>[[description]]</li>
-                </template>
-            </ul>
+            <template is="dom-if" if="{{_descriptionIsBullets(standardClicked.descriptionType)}}">
+                <ul>
+                    <template is="dom-repeat" items="[[standardClicked.description]]" as="description">
+                        <li>[[description]]</li>
+                    </template>
+                </ul>
+            </template>
+            <template is="dom-if" if="{{!_descriptionIsBullets(standardClicked.descriptionType)}}">
+                <p>[[standardClicked.description]]</p>
+            </template>
         </paper-dialog>
     </template>
 </dom-module>
@@ -212,6 +217,13 @@ Polymer({
     _showStandardInfo: function(e) {
         this.standardClicked = e.model.__data__.standard;
         this.$.standardInfoDialog.open();
+    },
+    _descriptionIsBullets: function(descriptionType) {
+        if (descriptionType == "bullets") {
+            return true;
+        } else {
+            return false;
+        }
     },
     arrayItem: function(change, index, path) {
         return this.get(path, change.base[index]);

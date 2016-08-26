@@ -7,6 +7,7 @@
 <link rel="import" href="../iron-icons/iron-icons.html">
 <link rel="import" href="../paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../paper-header-panel/paper-header-panel.html">
+<link rel="import" href="../paper-fab/paper-fab.html">
 <dom-module id="berry-open-close-page">
     <style>
     .flex-horizontal {
@@ -28,6 +29,12 @@
         color: #FFFFFF;
     }
     
+    #projectFab {
+        position: absolute;
+        right: 50px;
+        bottom: -20px;
+    }
+
     .paper-header {
         position: fixed;
         left: 0px;
@@ -64,7 +71,10 @@
     <template>
         <paper-header-panel mode="seamed">
             <div class="paper-header flex-center flex-horizontal" id="projectHeader">
-                <paper-icon-button id="backButton" icon="arrow-back" on-click="_backClick"></paper-icon-button>Projects</div>
+                <paper-icon-button id="backButton" icon="arrow-back" on-click="_backClick"></paper-icon-button>
+                <paper-fab mini id="projectFab" icon="add" title="add" on-click="_openNewProjectPage"></paper-fab>
+                Projects
+            </div>
             <div class="flex-center flex-horizontal container">
                 <div class="square" id="openProjectsSquare" on-click="_openProjectSquareClick">
                     <iron-icon icon="assignment"></iron-icon>
@@ -110,6 +120,12 @@ Polymer({
                         animation: 'transform-animation',
                         transformFrom: 'translateY(100vh)',
                         nodes: Polymer.dom(this.root).querySelectorAll(".square")
+                    }, {
+                        name: 'scale-up-animation',
+                        node: this.$.projectFab,
+                        timing: {
+                            delay: 300
+                        }
                     }],
                     'exit': [{
                         name: 'cascaded-animation',
@@ -199,6 +215,19 @@ Polymer({
         });
         this.sharedElements['projectHero'] = document.getElementById('requestProjectSquare');
         this.fire("requested-projects-click");
+    },
+    _openNewProjectPage: function() {
+        this.animationConfig['exit'] = [{
+            name: 'cascaded-animation',
+            animation: 'transform-animation',
+            transformTo: 'translateY(100vh)',
+            nodes: Polymer.dom(this.root).querySelectorAll(".square")
+        }, {
+            name: 'transform-animation',
+            transformTo: 'translateY(-30vh)',
+            node: this.$.projectHeader
+        }];
+        this.fire("new-project-click");
     }
 });
 </script>

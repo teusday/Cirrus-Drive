@@ -129,7 +129,7 @@
         color: white;
         font-size: 12pt;
     }
-
+    
     #errorDialog {
         color: red;
     }
@@ -224,8 +224,8 @@ Polymer({
             notify: true
         },
         addedStandards: {
-            type: Array,
-            value: []
+            type: Object,
+            value: {}
         },
         addedNames: {
             type: Array,
@@ -291,18 +291,17 @@ Polymer({
     },
     _addStandard: function() {
         var duplicate = false;
-        for (var i = this.addedStandards.length - 1; i >= 0; i--) {
-            if (this.addedStandards[i] == this.selectedStandard) {
-                duplicate = true;
+        if (!this.$.getStandards.valueIsEmpty(this.addedStandards)) {
+            for (var i = this._toArray(this.addedStandards).length - 1; i >= 0; i--) {
+                if (this._toArray(this.addedStandards)[i] == this.selectedStandard) {
+                    duplicate = true;
+                }
             }
         }
         if (!duplicate) {
             this.selectedStandard.subject = this.selectedSubject;
             this.selectedStandard.subsubject = this.selectedSubSubject;
-            var addObject = {
-                [this.selectedSubSubject]: this.selectedStandard
-            };
-            this.push('addedStandards', addObject);
+            this.addedStandards[this.selectedStandardName] = this.selectedStandard;
             var displayName = this.selectedSubject + ": " + this.selectedSubSubject + ": " + this.selectedStandardName;
             this.push('addedNames', displayName);
         }
@@ -326,7 +325,8 @@ Polymer({
             'startDate': this.$.startInput.value,
             'endDate': this.$.endInput.value,
             'proposedCredits': this.$.creditInput.value,
-            'standards': this.addedStandards
+            'standards': this.addedStandards,
+            'status': "requested"
         };
         this.$.requestAjax.params = {
             "auth": JSON.stringify(this.user),

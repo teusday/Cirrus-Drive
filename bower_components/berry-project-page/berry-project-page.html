@@ -102,7 +102,7 @@
                 </div>
                 <div class="projectPinkContainer">
                     <div>
-                        <b>Proposed Credits: </b><span>[[project.proprosedCredits]]</span>
+                        <b>Proposed Credits: </b><span>[[project.proposedCredits]]</span>
                     </div>
                 </div>
                 <div class="projectPinkContainer">
@@ -114,11 +114,11 @@
                     <div>
                         <b>Standards:</b>
                         <paper-listbox>
-                            <template is="dom-repeat" items="[[project.standards]]" as="standard">
+                            <template is="dom-repeat" items="[[_toArray(project.standards)]]" as="standard">
                                 <paper-item role="menuitem" class="flex-horizontal" on-click="_showStandardInfo">
                                     <paper-item-body two-line class="flexchild">
                                         <p>[[standard.name]]</p>
-                                        <p secondary>Credits: <span>[[standard.credit]]</span>
+                                        <p secondary>Credits: <span>[[standard.value.credits]]</span>
                                         </p>
                                     </paper-item-body>
                                     <iron-icon icon="info"></iron-icon>
@@ -129,17 +129,17 @@
                 </div>
             </div>
         </paper-header-panel>
-        <paper-dialog id="standardInfoDialog" style="background-color: [[_subjectColor(standardClicked.subject)]]" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
+        <paper-dialog id="standardInfoDialog" style="background-color: [[_subjectColor(standardClicked.value.subject)]]" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
             <h2>[[standardClicked.name]]</h2>
             <template is="dom-if" if="{{_descriptionIsBullets(standardClicked.descriptionType)}}">
                 <ul>
-                    <template is="dom-repeat" items="[[standardClicked.description]]" as="description">
+                    <template is="dom-repeat" items="[[standardClicked.value.description]]" as="description">
                         <li>[[description]]</li>
                     </template>
                 </ul>
             </template>
             <template is="dom-if" if="{{!_descriptionIsBullets(standardClicked.descriptionType)}}">
-                <p>[[standardClicked.description]]</p>
+                <p>[[standardClicked.value.description]]</p>
             </template>
         </paper-dialog>
     </template>
@@ -200,6 +200,7 @@ Polymer({
         }
     },
     _subjectColor: function(subject) {
+        // this should really be a switch
         if (subject == "english") {
             return "#F44336";
         } else if (subject == "socialStudies") {
@@ -224,6 +225,14 @@ Polymer({
         } else {
             return false;
         }
+    },
+    _toArray: function(obj) {
+        return Object.keys(obj).map(function(key) {
+            return {
+                name: key,
+                value: obj[key]
+            };
+        });
     },
     arrayItem: function(change, index, path) {
         return this.get(path, change.base[index]);

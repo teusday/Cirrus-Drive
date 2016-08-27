@@ -12,13 +12,13 @@
     :host {
         height: 500px;
     }
-
+    
     #circleBox {
         @apply(--layout-fit);
         @apply(--layout-horizontal);
         @apply(--layout-center-center);
     }
-
+    
     .circle {
         display: inline-block;
         width: 100px;
@@ -30,11 +30,11 @@
         text-align: center;
         padding: 1%;
     }
-
+    
     .circle iron-icon {
         padding-top: 18%;
     }
-
+    
     #signOutButton {
         color: var(--primary-color);
         position: fixed;
@@ -58,20 +58,10 @@
                 <iron-icon icon="done"></iron-icon>
                 <p>Tasks</p>
             </div>
-            <template is="dom-if" if="{{userIsAdvisor}}">
-                <div id="advisorCircle" class="circle" on-click="_advisorClick">
-                    <iron-icon icon="pregnant-woman"></iron-icon>
-                    <p>Advisor</p>
-                </div>
-            </template>
-
-            <!--This is so I can test because I am neither an admin or an advisor-->
-
-            <!-- <div id="advisorCircle" class="circle" on-click="_advisorClick">
+            <div id="advisorCircle" class="circle" on-click="_advisorClick" hidden="{{!userIsAdvisor}}">
                 <iron-icon icon="pregnant-woman"></iron-icon>
                 <p>Advisor</p>
-            </div> -->
-
+            </div>
         </div>
     </template>
 </dom-module>
@@ -115,10 +105,13 @@ Polymer({
                 }
             }
         },
-
         userIsAdvisor: {
             type: Boolean,
             value: false
+        },
+        user: {
+            type: Object,
+            notify: true
         }
     },
     _projectsClick: function() {
@@ -140,10 +133,10 @@ Polymer({
         });
     },
     _advisorClick: function() {
-      this._assignAnimationToCircle(this.$$('#advisorCircle'));
-      this.fire("circle-click",{
-          pageId: "advisor"
-      });
+        this._assignAnimationToCircle(this.$$('#advisorCircle'));
+        this.fire("circle-click", {
+            pageId: "advisor"
+        });
     },
     _assignAnimationToCircle: function(target) {
         var nodesToScale = [];

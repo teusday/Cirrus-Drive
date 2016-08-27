@@ -45,7 +45,7 @@
         <h2 class="title">Cirrus Drive</h2>
         <neon-animated-pages id="mainPages" selected="[[indexSelect]]">
             <berry-login id="berry-login" on-login-successful="_loginSuccessful" user="{{user}}"></berry-login>
-            <berry-circles id="berry-circles-page" on-circle-click="_circleClick" on-sign-out="_signOut"></berry-circles>
+            <berry-circles id="berry-circles-page" user="{{user}}" on-circle-click="_circleClick" on-sign-out="_signOut"></berry-circles>
             <berry-open-close-page id="berry-open-close-page" on-back-click="_backClick" on-open-projects-click="_openProjectsClick" on-closed-projects-click="_closedProjectsClick" on-requested-projects-click="_requestedProjectsClick" on-new-project-click="_newProjectClick"></berry-open-close-page>
             <berry-message-page id="berry-message-page" user="{{user}}" on-back-click="_backClick"></berry-message-page>
             <berry-open-projects id="berry-open-projects" user="{{user}}" on-open-project-back-click="_openProjectsBackClick" on-open-project-list-click="_openProjectListClick" clickedproject="{{clickedProject}}"></berry-open-projects>

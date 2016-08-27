@@ -2,7 +2,7 @@
 ## Or don't, whatever.
 
 ###To-Do:
-**Bold = currently working on***
+**Bold = currently working on**
 - ~~Change all the headers to paper-headers~~
 - Messages
   - ~~make reply work~~

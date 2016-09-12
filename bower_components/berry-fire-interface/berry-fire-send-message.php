@@ -18,6 +18,10 @@ if ($id != "null") {
     echo "user error";
 }
 
+function getPathFromMessageData($id) {
+    return "messages/" . $id . "/inbox";
+}
+
 function idExists($check, $users) {
     $returnMe = "null";
     foreach($users as $key => $value) {
@@ -27,6 +31,10 @@ function idExists($check, $users) {
     }
     return $returnMe;
 }
+
+////////////////////////////////////////
+//probably don't touch below this line//
+///////////////////////////////////////
 
 function initCurlHandler() {
         $GLOBALS['global']->_curlHandler = curl_init();
@@ -66,10 +74,6 @@ function writeData($path, $data, $method = 'POST', $options = array()) {
             $return = null;
         }
         return $return;
-}
-
-function getPathFromMessageData($id) {
-	return "messages/" . $id . "/inbox";
 }
 
 function _getJsonPath($path, $options = array()) {

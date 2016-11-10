@@ -46,7 +46,11 @@
         <firebase-document id="isAdvisor" path="/users/[[user.uid]]/advisor" data="{{userIsAdvisor}}"></firebase-document>
         <paper-button id="signOutButton" on-click="_signOut">Sign Out</paper-button>
         <div id="circleBox">
-            <div id="projectCircle" class="circle" on-click="_projectsClick">
+        	<div id="advisorCircle" class="circle" on-click="_advisorClick" hidden="{{!userIsAdvisor}}">
+                <iron-icon icon="pregnant-woman"></iron-icon>
+                <p>Advisor</p>
+            </div>
+            <div id="projectCircle" class="circle" on-click="_projectsClick" hidden="{{userIsAdvisor}}">
                 <iron-icon icon="assignment"></iron-icon>
                 <p>Projects</p>
             </div>
@@ -57,10 +61,6 @@
             <div id="taskCircle" class="circle" on-click="_tasksClick">
                 <iron-icon icon="done"></iron-icon>
                 <p>Tasks</p>
-            </div>
-            <div id="advisorCircle" class="circle" on-click="_advisorClick" hidden="{{!userIsAdvisor}}">
-                <iron-icon icon="pregnant-woman"></iron-icon>
-                <p>Advisor</p>
             </div>
         </div>
     </template>

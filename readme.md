@@ -22,6 +22,7 @@
   - figure out what a task page needs
 - **Advisor Page**
   - ~~make it so that the advisor circle shows up when you're an advisor~~
+  - **make the animations work with the advisor circle**
   - **generate transcripts and stuff**
   - **page to look at project requests**
   - change advisor icon back to something less mean (eventually)

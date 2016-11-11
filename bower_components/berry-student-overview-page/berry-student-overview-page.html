@@ -1,0 +1,101 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../neon-animation/neon-shared-element-animatable-behavior.html">
+<link rel="import" href="../neon-animation/neon-animatable-behavior.html">
+<link rel="import" href="../neon-animation/neon-animation-runner-behavior.html">
+<link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../paper-header-panel/paper-header-panel.html">
+<link rel="import" href="../polymerfire/polymerfire.html">
+<style>
+
+</style>
+
+<template>
+
+	<!-- PATH!!!!! -->
+    <firebase-document id="getStudents" path="PUT THE PATH HERE" data="{{students}}"></firebase-document>
+    <!-- PATH!!!!! -->
+    
+	<paper-header-panel mode="seamed">
+		<div class="paper-header flex-center flex-horizontal" id="studentOverviewHeader">
+			<paper-icon-button id="backButton" icon="arrow-back" on-click="_backClick"></paper-icon-button>
+			Student Overview
+		</div>
+		<div class="flex-center flex-horizontal container">
+			<div id="studentContent">
+				<div id="studentPinkContainer">
+					<paper-listbox id="messagesList">
+						<template is="dom-repeat" items="[[_toArray(students)]]" as="student">
+							<!-- TODO sort alphabeticly -->
+							<paper-item role="menuitem" class="flex-horizontal" on-click="_studentClick">
+								<paper-item-body class="flexchild">
+									<div>
+										<!-- may not be correct -->
+										[[student.value.fullName]]
+									</div>
+								</paper-item-body>
+								<iron-icon icon="info"></iron-icon>
+							</paper-item>						
+						</template>
+					</paper-listbox>
+				</div>
+			</div>
+		</div>
+	</paper-header-panel>
+	<paper-dialog id="studentInfoDialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
+		<h2>[[clickedStudent.fullName]]</h2>
+	</paper-dialog>
+</template>
+
+<script>
+Polymer({
+	is: "berry-student-overview-page",
+	behaviors: [
+        Polymer.NeonSharedElementAnimatableBehavior
+    ],
+    properties: {
+    	animationConfig: {
+            type: Object,
+            value: function() {
+                return {
+                    'entry': [{
+                        name: 'hero-animation',
+                        id: 'hero',
+                        toPage: this
+                    }, {
+                        name: 'transform-animation',
+                        transformFrom: 'translateY(100vh)',
+                        node: this.$.studentPinkContainer
+                    }],
+                    'exit': [{
+                        name: 'transform-animation',
+                        transformTo: 'translateY(100vh)',
+                        node: this.$.studentPinkContainer
+                    }, {
+                        name: 'transform-animation',
+                        transformTo: 'translateY(-30vh)',
+                        node: this.$.studentOverviewHeader
+                    }]
+                }
+            }
+        }
+    },
+	_toArray: function(s) {
+        return Object.keys(s).map(function(key) {
+            return {
+                name: key,
+                value: s[key]
+            };
+        });
+    },
+    _backClick: function() {
+        this.fire("back-click");
+    },
+    _studentClick: function() {
+    	this.clickedStudent.__data__.student.value;
+    	this.$.studentInfoDialog.open();
+    }
+});
+</script>

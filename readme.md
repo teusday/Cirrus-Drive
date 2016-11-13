@@ -29,4 +29,7 @@
   - change advisor icon back to something less mean (eventually)
 - Connect to Google Drive
 - Set up routing, so a browser back takes you back
-- Mobile version could use work
+- **Mobile version could use work**
+  - Fix sizing of squares
+  - Fix Neon animations in mobile version
+  - Make it scrollable

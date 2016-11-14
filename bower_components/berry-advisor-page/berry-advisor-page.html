@@ -132,14 +132,14 @@
             }];
             this.fire("back-click");
         },
-        __studentOverviewSquareClick: function() {
+        _studentOverviewSquareClick: function() {
             this.animationConfig['exit'][0] = {
                 name: 'scale-down-animation',
-                node: document.getElementById('studentOverviewSquare')
+                node: document.getElementById('otherStuffSquare')
             };
             this.animationConfig['exit'].push({
                 name: 'hero-animation',
-                id: 'projectHero',
+                id: 'studentOverviewHero',
                 fromPage: this
             });
             this.sharedElements['projectHero'] = document.getElementById('studentOverviewSquare');

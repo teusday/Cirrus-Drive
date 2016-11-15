@@ -224,12 +224,18 @@ Polymer({
         }
     },
     _toArray: function(inbox) {
-        return Object.keys(inbox).map(function(key) {
+        var array = Object.keys(inbox).map(function(key) {
             return {
                 name: key,
                 value: inbox[key]
             };
         });
+        if (array.length >= 1) {
+            return array
+        } else {
+            //return no message screen
+            return array
+        }
     },
     _backClick: function() {
         this.fire("back-click");

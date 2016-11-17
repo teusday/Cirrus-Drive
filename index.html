@@ -32,6 +32,8 @@
     <link rel="import" href="bower_components/berry-new-project/berry-new-project.html">
     <!--berry advisor page-->
     <link rel="import" href="bower_components/berry-advisor-page/berry-advisor-page.html">
+	<!--berry student overview page-->
+	<link rel="import" href="bower_components/berry-student-overview-page/berry-student-overview-page.html">
     <style is="custom-style">
     :root {
         --primary-color: #03A9F4;
@@ -52,7 +54,8 @@
             <berry-project-page id="berry-project-page" user="{{user}}" project="{{clickedProject}}" on-project-page-back-click="_projectPageBackClick"></berry-project-page>
             <berry-requested-projects id="berry-requested-projects" user="{{user}}" clickedproject="{{clickedProject}}" on-requested-project-back-click="_requestedProjectsBackClick" on-requested-project-list-click="_requestedProjectListClick"></berry-requested-projects>
             <berry-new-project id="berry-new-project" user="{{user}}" on-new-project-back-click="_newProjectBackClick"></berry-new-project>
-            <berry-advisor-page id="berry-advisor-page" user="{{user}}" on-back-click="_backClick" student-overview-click="_studentOverveiwClick"></berry-advisor-page>
+            <berry-advisor-page id="berry-advisor-page" user="{{user}}" on-back-click="_backClick" on-student-overview-click="_studentOverviewSquareClick"></berry-advisor-page>
+        	<berry-student-overview-page id="berry-student-overview-page" user="{{user}}" on-back-click="_backClick"></berry-student-overview-page>
         </neon-animated-pages>
     </template>
     <script>
@@ -202,8 +205,9 @@
         }
         scope.indexSelect = 2;
     };
-    scope._studentOverviewClick = function() {
+    scope._studentOverviewSquareClick = function() {
         console.log("You clicked student overview. Congratulations!");
+        scope.indexSelect = 9;
     };
     scope._signOut = function() {
         var loginPage = document.getElementById('berry-login');

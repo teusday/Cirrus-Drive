@@ -30,6 +30,6 @@
 - Connect to Google Drive
 - Set up routing, so a browser back takes you back
 - **Mobile version could use work**
-  - Fix sizing of squares
+  - **Fix sizing of squares**
   - Fix Neon animations in mobile version
-  - Make it scrollable
+  - **Make it scrollable**

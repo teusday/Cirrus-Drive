@@ -26,7 +26,8 @@
   - **make a student overview page**
   	- ~~make it appear~~
   	- **make it functional**
-  	- **generate transcripts and stuff**
+  		- **make dialog boxes for student information**
+  		- **generate transcripts and stuff**
   - **page to look at project requests**
   - change advisor icon back to something less mean (eventually)
 - Connect to Google Drive

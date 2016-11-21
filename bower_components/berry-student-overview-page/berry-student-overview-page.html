@@ -57,7 +57,7 @@
         overflow-y: auto;
     }
     
-    #messagesContent {
+    #studentContent {
         position: absolute;
         left: 0px;
         right: 0px;
@@ -66,7 +66,7 @@
         @apply(--layout-center-center);
     }
     
-    #messagesPinkContainer {
+    #studentPinkContainer {
         color: white;
         background-color: var(--accent-color);
         max-width: 800px;
@@ -75,7 +75,7 @@
         margin: 10px;
     }
     
-    #messagesPinkContainer paper-listbox {
+    #studentPinkContainer paper-listbox {
         margin: 10px;
     }
     
@@ -99,7 +99,7 @@
 		<div class="flex-center flex-horizontal container">
 			<div id="studentContent">
 				<div id="studentPinkContainer">
-					<paper-listbox id="messagesList">
+					<paper-listbox id="studentList">
 						<template is="dom-repeat" items="[[_toArray(students)]]" as="student">
 							<!-- TODO sort alphabeticly -->
 							<paper-item role="menuitem" class="flex-horizontal" on-click="_studentClick">
@@ -141,9 +141,18 @@ Polymer({
             value: function() {
                 return {
                     'entry': [{
+                        name: 'slide-from-top-animation',
+                        node: this.$.studentOverviewHeader
+                    }, {
                         name: 'hero-animation',
                         id: 'studentOverviewHero',
                         toPage: this
+                    }, {
+                        name: 'fade-in-animation',
+                        node: this.$.studentList,
+                        timing: {
+                            delay: 500
+                        }
                     }],
                     'exit': [{
                         name: 'transform-animation',

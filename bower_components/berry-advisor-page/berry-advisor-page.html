@@ -137,12 +137,17 @@
                 name: 'scale-down-animation',
                 node: document.getElementById('otherStuffSquare')
             };
+            this.animationConfig['exit'][1] = {
+                name: 'transform-animation',
+                transformTo: 'translateY(-30vh)',
+                node: this.$$('#projectHeader')
+            };
             this.animationConfig['exit'].push({
                 name: 'hero-animation',
                 id: 'studentOverviewHero',
                 fromPage: this
             });
-            this.sharedElements['projectHero'] = document.getElementById('studentOverviewSquare');
+            this.sharedElements['studentOverviewHero'] = document.getElementById('studentOverviewSquare');
             this.fire("student-overview-click");
         },
         _otherStuffSquareClick: function() {

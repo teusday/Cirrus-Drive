@@ -55,7 +55,7 @@
             <berry-requested-projects id="berry-requested-projects" user="{{user}}" clickedproject="{{clickedProject}}" on-requested-project-back-click="_requestedProjectsBackClick" on-requested-project-list-click="_requestedProjectListClick"></berry-requested-projects>
             <berry-new-project id="berry-new-project" user="{{user}}" on-new-project-back-click="_newProjectBackClick"></berry-new-project>
             <berry-advisor-page id="berry-advisor-page" user="{{user}}" on-back-click="_backClick" on-student-overview-click="_studentOverviewSquareClick"></berry-advisor-page>
-        	<berry-student-overview-page id="berry-student-overview-page" user="{{user}}" on-back-click="_backClick"></berry-student-overview-page>
+        	<berry-student-overview-page id="berry-student-overview-page" user="{{user}}" on-back-click="_studentOverviewBackClick"></berry-student-overview-page>
         </neon-animated-pages>
     </template>
     <script>
@@ -206,8 +206,15 @@
         scope.indexSelect = 2;
     };
     scope._studentOverviewSquareClick = function() {
-        console.log("You clicked student overview. Congratulations!");
         scope.indexSelect = 9;
+    };
+    scope._studentOverviewBackClick = function() {
+    	var advisorPage = document.getElementById('berry-advisor-page');
+    	advisorPage.animationConfig['entry'][0] = {
+            name: 'slide-from-top-animation',
+            node: advisorPage.$$('#projectHeader')
+        }
+    	scope.indexSelect = 8;
     };
     scope._signOut = function() {
         var loginPage = document.getElementById('berry-login');

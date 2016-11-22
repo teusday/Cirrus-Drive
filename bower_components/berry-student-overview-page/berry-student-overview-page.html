@@ -130,7 +130,12 @@
 		</div>
 	</paper-header-panel>
 	<paper-dialog id="studentInfoDialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
-		<h2 class="flex-center"><img src="[[clickedStudent.photoURL]]"/><p>[[clickedStudent.fullName]]<p></h2>
+		<h2 class="flex-center">
+			<img src="[[clickedStudent.photoURL]]"/>
+			<p>[[clickedStudent.fullName]]</p>
+			<h4>Student Since: [[clickedStudent.studentSince]]</h4>
+			<h4>Username: [[clickedStudent.username]]</h4>
+			</h2>
 		<paper-button raised on-click="_manageStudent">Manage Student</paper-button>
 		<paper-button raised on-click="_generateTrans">Generate Transcript</paper-button>
 	</paper-dialog>

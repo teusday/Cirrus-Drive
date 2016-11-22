@@ -90,7 +90,7 @@
 </style>
 
 <template>
-    <firebase-document id="getStudents" path="https://cirrus-drive.firebaseio.com/users" data="{{students}}"></firebase-document>
+    <firebase-document id="getStudents" path="/users" data="{{students}}"></firebase-document>
 	<paper-header-panel mode="seamed">
 		<div class="paper-header flex-center flex-horizontal" id="studentOverviewHeader">
 			<paper-icon-button id="backButton" icon="arrow-back" on-click="_backClick"></paper-icon-button>
@@ -129,8 +129,7 @@ Polymer({
     ],
     properties: {
     	students: {
-    		value: {'htuenaoshtn': {'fullName': 'Steven'}, 'htuenckkea': {'fullName': 'Not Steven'}},
-    		observer: '_studentChanged'
+    		type: Object
     	},
     	sharedElements: {
     		value: function() {
@@ -184,9 +183,6 @@ Polymer({
     _studentClick: function(e) {
     	this.clickedStudent = e.model.__data__.student.value;
     	this.$.studentInfoDialog.open();
-    }, 
-    _studentChanged: function(newData, oldData) {
-    	console.log(newData);
     }
-    });
+});
 </script>

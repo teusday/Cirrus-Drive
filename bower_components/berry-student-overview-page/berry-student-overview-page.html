@@ -7,6 +7,7 @@
 <link rel="import" href="../iron-icons/iron-icons.html">
 <link rel="import" href="../paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../paper-header-panel/paper-header-panel.html">
+<link rel="import" href="../paper-button/paper-button.html">
 <link rel="import" href="../polymerfire/polymerfire.html">
 <dom-module id="berry-student-overview-page">
 <style>
@@ -87,6 +88,18 @@
     paper-dialog {
         width: 50%;
     }
+    
+    paper-dialog paper-button {
+    	color: white;
+    	background-color: var(--primary-color);
+    	height: 30px;
+    	margin-left: 25px;
+    }
+    
+    paper-dialog img {
+    	height: 100px;
+    	width: 100px;
+    }
 </style>
 
 <template>
@@ -117,7 +130,9 @@
 		</div>
 	</paper-header-panel>
 	<paper-dialog id="studentInfoDialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
-		<h2>[[clickedStudent.fullName]]</h2>
+		<h2 class="flex-center"><img src="[[clickedStudent.photoURL]]"/><p>[[clickedStudent.fullName]]<p></h2>
+		<paper-button raised on-click="_manageStudent">Manage Student</paper-button>
+		<paper-button raised on-click="_generateTrans">Generate Transcript</paper-button>
 	</paper-dialog>
 </template>
 </dom-module>
@@ -183,6 +198,12 @@ Polymer({
     _studentClick: function(e) {
     	this.clickedStudent = e.model.__data__.student.value;
     	this.$.studentInfoDialog.open();
+    },
+    _manageStudent: function() {
+    	console.log("You clicked Manage Student.");
+    },
+    _generateTrans: function() {
+    	console.log("You clicked Generate Transcript.");
     }
 });
 </script>

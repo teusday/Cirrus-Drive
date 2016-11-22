@@ -105,7 +105,6 @@
 							<paper-item role="menuitem" class="flex-horizontal" on-click="_studentClick">
 								<paper-item-body class="flexchild">
 									<div>
-										<!-- may not be correct -->
 										[[student.value.fullName]]
 									</div>
 								</paper-item-body>
@@ -129,6 +128,10 @@ Polymer({
         Polymer.NeonSharedElementAnimatableBehavior
     ],
     properties: {
+    	students: {
+    		value: {'htuenaoshtn': {'fullName': 'Steven'}, 'htuenckkea': {'fullName': 'Not Steven'}},
+    		observer: '_studentChanged'
+    	},
     	sharedElements: {
     		value: function() {
     			return {
@@ -178,9 +181,12 @@ Polymer({
     _backClick: function() {
         this.fire("back-click");
     },
-    _studentClick: function() {
-    	this.clickedStudent.__data__.student.value;
+    _studentClick: function(e) {
+    	this.clickedStudent = e.model.__data__.student.value;
     	this.$.studentInfoDialog.open();
+    }, 
+    _studentChanged: function(newData, oldData) {
+    	console.log(newData);
     }
-});
+    });
 </script>

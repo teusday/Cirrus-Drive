@@ -7,6 +7,7 @@
 <link rel="import" href="../iron-icons/iron-icons.html">
 <link rel="import" href="../paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../paper-header-panel/paper-header-panel.html">
+<link rel="import" href="../paper-button/paper-button.html">
 <link rel="import" href="../polymerfire/polymerfire.html">
 <dom-module id="berry-student-overview-page">
 <style>
@@ -57,7 +58,7 @@
         overflow-y: auto;
     }
     
-    #messagesContent {
+    #studentContent {
         position: absolute;
         left: 0px;
         right: 0px;
@@ -66,7 +67,7 @@
         @apply(--layout-center-center);
     }
     
-    #messagesPinkContainer {
+    #studentPinkContainer {
         color: white;
         background-color: var(--accent-color);
         max-width: 800px;
@@ -75,7 +76,7 @@
         margin: 10px;
     }
     
-    #messagesPinkContainer paper-listbox {
+    #studentPinkContainer paper-listbox {
         margin: 10px;
     }
     
@@ -87,10 +88,22 @@
     paper-dialog {
         width: 50%;
     }
+    
+    paper-dialog paper-button {
+    	color: white;
+    	background-color: var(--primary-color);
+    	height: 30px;
+    	margin-left: 25px;
+    }
+    
+    paper-dialog img {
+    	height: 100px;
+    	width: 100px;
+    }
 </style>
 
 <template>
-    <firebase-document id="getStudents" path="https://cirrus-drive.firebaseio.com/users" data="{{students}}"></firebase-document>
+    <firebase-document id="getStudents" path="/users" data="{{students}}"></firebase-document>
 	<paper-header-panel mode="seamed">
 		<div class="paper-header flex-center flex-horizontal" id="studentOverviewHeader">
 			<paper-icon-button id="backButton" icon="arrow-back" on-click="_backClick"></paper-icon-button>
@@ -99,13 +112,12 @@
 		<div class="flex-center flex-horizontal container">
 			<div id="studentContent">
 				<div id="studentPinkContainer">
-					<paper-listbox id="messagesList">
+					<paper-listbox id="studentList">
 						<template is="dom-repeat" items="[[_toArray(students)]]" as="student">
 							<!-- TODO sort alphabeticly -->
 							<paper-item role="menuitem" class="flex-horizontal" on-click="_studentClick">
 								<paper-item-body class="flexchild">
 									<div>
-										<!-- may not be correct -->
 										[[student.value.fullName]]
 									</div>
 								</paper-item-body>
@@ -118,7 +130,15 @@
 		</div>
 	</paper-header-panel>
 	<paper-dialog id="studentInfoDialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
-		<h2>[[clickedStudent.fullName]]</h2>
+		<h2 class="flex-center">
+			<img src="[[clickedStudent.photoURL]]"/>
+			<p>[[clickedStudent.fullName]]</p>
+			<h4>Student Since: [[clickedStudent.studentSince]]</h4>
+			<h4>Username: [[clickedStudent.username]]</h4>
+			</h2>
+		<paper-button raised on-click="_viewProjects">View Projects</paper-button>
+		<paper-button raised on-click="_generateTrans">Generate Transcript</paper-button>
+		<paper-button raised on-click="_manageStudent">Manage Student</paper-button>
 	</paper-dialog>
 </template>
 </dom-module>
@@ -129,6 +149,9 @@ Polymer({
         Polymer.NeonSharedElementAnimatableBehavior
     ],
     properties: {
+    	students: {
+    		type: Object
+    	},
     	sharedElements: {
     		value: function() {
     			return {
@@ -141,9 +164,18 @@ Polymer({
             value: function() {
                 return {
                     'entry': [{
+                        name: 'slide-from-top-animation',
+                        node: this.$.studentOverviewHeader
+                    }, {
                         name: 'hero-animation',
                         id: 'studentOverviewHero',
                         toPage: this
+                    }, {
+                        name: 'fade-in-animation',
+                        node: this.$.studentList,
+                        timing: {
+                            delay: 500
+                        }
                     }],
                     'exit': [{
                         name: 'transform-animation',
@@ -169,9 +201,15 @@ Polymer({
     _backClick: function() {
         this.fire("back-click");
     },
-    _studentClick: function() {
-    	this.clickedStudent.__data__.student.value;
+    _studentClick: function(e) {
+    	this.clickedStudent = e.model.__data__.student.value;
     	this.$.studentInfoDialog.open();
+    },
+    _manageStudent: function() {
+    	console.log("You clicked Manage Student.");
+    },
+    _generateTrans: function() {
+    	console.log("You clicked Generate Transcript.");
     }
 });
 </script>

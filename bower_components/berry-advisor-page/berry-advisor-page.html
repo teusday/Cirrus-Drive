@@ -80,9 +80,9 @@
                         <iron-icon icon="supervisor-account"></iron-icon>
                         <br>Student Overview
                     </div>
-                    <div class="square" id="otherStuffSquare" on-click="_otherStuffSquareClick">
-                        <iron-icon icon="hourglass-empty"></iron-icon>
-                        <br>Other Stuff
+                    <div class="square" id="standardsSquare" on-click="_standardsSquareClick">
+                        <iron-icon icon="sort"></iron-icon>
+                        <br>Manage Standards
                     </div>
                 </div>
             </paper-header-panel>
@@ -142,18 +142,23 @@
         _studentOverviewSquareClick: function() {
             this.animationConfig['exit'][0] = {
                 name: 'scale-down-animation',
-                node: document.getElementById('otherStuffSquare')
+                node: document.getElementById('standardsSquare')
+            };
+            this.animationConfig['exit'][1] = {
+                name: 'transform-animation',
+                transformTo: 'translateY(-30vh)',
+                node: this.$$('#projectHeader')
             };
             this.animationConfig['exit'].push({
                 name: 'hero-animation',
                 id: 'studentOverviewHero',
                 fromPage: this
             });
-            this.sharedElements['projectHero'] = document.getElementById('studentOverviewSquare');
+            this.sharedElements['studentOverviewHero'] = document.getElementById('studentOverviewSquare');
             this.fire("student-overview-click");
         },
-        _otherStuffSquareClick: function() {
-
+        _standardsSquareClick: function() {
+			console.log("you clicked on the standards square.");
         }
     });
 </script>

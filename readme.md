@@ -22,9 +22,14 @@
   - figure out what a task page needs
 - **Advisor Page**
   - ~~make it so that the advisor circle shows up when you're an advisor~~
-  - **make the animations work with the advisor circle**
+  - ~~make the animations work with the advisor circle~~
   - **make a student overview page**
-  	- **generate transcripts and stuff**
+  	- ~~make it appear~~
+  	- **make it functional**
+  		- ~~make dialog boxes for student information~~
+  		- **generate transcripts**
+  		- **view projects**
+  		- **manage students**
   - **page to look at project requests**
   - change advisor icon back to something less mean (eventually)
 - Connect to Google Drive

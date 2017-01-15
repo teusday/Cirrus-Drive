@@ -94,9 +94,7 @@
                 <div id="requestedProjectContent">
                     <div id="requestedProjectPinkContainer">
                         <paper-listbox id="requestedProjectList">
-                          <template is="dom-if" if="[[_toArray(requestedProjects)]]">
-                            <div hidden$="{{!hasProjects}}" class="flex-center flex-horizontal">[[noProjects]]</div>
-                          </template>
+                            <div hidden$="{{hasProjects}}" class="flex-center flex-horizontal">[[noProjects]]</div>
                             <template is="dom-repeat" items="[[_toArray(requestedProjects)]]" as="project" sort="_sortrequestedProjects">
                                 <paper-item on-click="_requestedProjectListClick" role="menuitem" class="flex-horizontal">
                                     <paper-item-body two-line class="flexchild">
@@ -184,7 +182,7 @@ Polymer({
         this.fire("requested-project-list-click");
     },
     _toArray: function(obj) {
-
+        this.hasProjects = obj.length!=undefined;
         if (!this.$.getRequestedProjects.valueIsEmpty(obj)) {
             return Object.keys(obj).map(function(key) {
                 return {

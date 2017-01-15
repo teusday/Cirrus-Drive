@@ -95,7 +95,7 @@
                 <div id="openProjectContent">
                     <div id="openProjectPinkContainer">
                         <paper-listbox id="openProjectList">
-                              <div hidden$="{{!hasProjects}}" class="flex-center flex-horizontal">[[noProjects]]</div>
+                              <div hidden$="{{hasProjects}}" class="flex-center flex-horizontal">[[noProjects]]</div>
                             <template is="dom-repeat" items="[[_toArray(openProjects)]]" as="project" sort="_sortOpenProjects">
                                 <paper-item on-click="_openProjectListClick" role="menuitem" class="flex-horizontal">
                                     <paper-item-body two-line class="flexchild">
@@ -183,7 +183,7 @@ Polymer({
         this.fire("open-project-list-click");
     },
     _toArray: function(obj) {
-        this.hasProjects = obj.length==undefined;
+        this.hasProjects = obj.length!=undefined;
         return Object.keys(obj).map(function(key) {
             return {
                 name: key,

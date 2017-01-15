@@ -95,7 +95,7 @@
                     <div id="requestedProjectPinkContainer">
                         <paper-listbox id="requestedProjectList">
                           <template is="dom-if" if="[[_toArray(requestedProjects)]]">
-                            <div class="flex-center flex-horizontal">[[noProjects]]</div>
+                            <div hidden$="{{!hasProjects}}" class="flex-center flex-horizontal">[[noProjects]]</div>
                           </template>
                             <template is="dom-repeat" items="[[_toArray(requestedProjects)]]" as="project" sort="_sortrequestedProjects">
                                 <paper-item on-click="_requestedProjectListClick" role="menuitem" class="flex-horizontal">
@@ -123,6 +123,9 @@ Polymer({
         user: {
             type: Object,
             notify: true
+        },
+        hasProjects: {
+          type: Boolean
         },
         requestedProjects: {
             type: Array
@@ -181,6 +184,7 @@ Polymer({
         this.fire("requested-project-list-click");
     },
     _toArray: function(obj) {
+
         if (!this.$.getRequestedProjects.valueIsEmpty(obj)) {
             return Object.keys(obj).map(function(key) {
                 return {
@@ -192,6 +196,7 @@ Polymer({
             return null;
         }
     },
+    //!Is this necessary? Looks like a holdover from berry-new-project
     _toShallowArray: function(obj) {
         if (!this.$.getRequestedProjects.valueIsEmpty(obj)) {
             return Object.keys(obj);

@@ -17,7 +17,7 @@
   - ~~make a _requested projects_ page~~
   -	~~make a _new project_ button~~
   - ~~make a _new project_ screen~~
-  - make a _no projects_ screen for all three categories
+  - **make a _no projects_ screen for all three categories**
 - Task Page
   - figure out what a task page needs
 - **Advisor Page**

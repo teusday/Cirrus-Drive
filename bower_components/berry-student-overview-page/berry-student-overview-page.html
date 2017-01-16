@@ -113,7 +113,7 @@
 			<div id="studentContent">
 				<div id="studentPinkContainer">
 					<paper-listbox id="studentList">
-						<template is="dom-repeat" items="[[_toArray(students)]]" as="student">
+						<template is="dom-repeat" items="[[_toArray(students)]]" as="student" sort="_alphabetizeStudents">
 							<!-- TODO sort alphabeticly -->
 							<paper-item role="menuitem" class="flex-horizontal" on-click="_studentClick">
 								<paper-item-body class="flexchild">
@@ -210,6 +210,17 @@ Polymer({
     },
     _generateTrans: function() {
     	console.log("You clicked Generate Transcript.");
+    },
+    _alphabetizeStudents: function(a, b) {
+      // alphabetizes based on last name, reliant on username schema of "n chars of last name, n chars of first name"
+      /*
+      if this ever breaks, it's because the username format changed
+      you're gonna have to separate out the last and first names, sort by last, and compute fullName
+      sorry dude
+      */
+      aName = a.value.username.toLowerCase();
+      bName = b.value.username.toLowerCase();
+      return aName<bName?-1:1;
     }
 });
 </script>

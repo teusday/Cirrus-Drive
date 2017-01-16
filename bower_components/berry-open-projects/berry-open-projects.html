@@ -125,6 +125,7 @@ Polymer({
         },
         hasProjects: {
           type: Boolean,
+          computed: "_hasProjects(openProjects)"
         },
         openProjects: {
             type: Array
@@ -182,8 +183,10 @@ Polymer({
         this.clickedproject = e.model.__data__.project.value;
         this.fire("open-project-list-click");
     },
+    _hasProjects: function(obj) {
+      return obj.length!=undefined;
+    },
     _toArray: function(obj) {
-        this.hasProjects = obj.length!=undefined;
         return Object.keys(obj).map(function(key) {
             return {
                 name: key,

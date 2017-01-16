@@ -220,7 +220,7 @@ Polymer({
       */
       aName = a.value.username.toLowerCase();
       bName = b.value.username.toLowerCase();
-      return aName.charCodeAt(0)-bName.charCodeAt(0);
+      return aName<bName?-1:1;
     }
 });
 </script>

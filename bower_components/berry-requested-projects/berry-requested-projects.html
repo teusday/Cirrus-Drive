@@ -194,7 +194,7 @@ Polymer({
       // sorts projects alphabetically
       aProjectName = a.value.name.toLowerCase();
       bProjectName = b.value.name.toLowerCase();
-      return aProjectName.charCodeAt(0)-bProjectName.charCodeAt(0);
+      return aProjectName<bProjectName?-1:1;
     }
 });
 </script>

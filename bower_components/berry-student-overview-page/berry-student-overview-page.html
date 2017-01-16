@@ -105,8 +105,8 @@
     </style>
     <template>
         <firebase-document id="getStudents" path="/users" data="{{students}}"></firebase-document>
-        <firebase-document id="getProjects" path="/projects/[[clickedStudent]]/open" data="{{openProjects}}"></firebase-document>
-        <firebase-document id="getProjects" path="/projects/[[clickedStudent]]/closed" data="{{closedProjects}}"></firebase-document>
+        <firebase-document id="getProjects" path="/projects/[[clickedstudent]]/open" data="{{openProjects}}"></firebase-document>
+        <firebase-document id="getProjects" path="/projects/[[clickedstudent]]/closed" data="{{closedProjects}}"></firebase-document>
         <paper-header-panel mode="seamed">
             <div class="paper-header flex-center flex-horizontal" id="studentOverviewHeader">
                 <paper-icon-button id="backButton" icon="arrow-back" on-click="_backClick"></paper-icon-button>
@@ -133,7 +133,7 @@
                                 <paper-item><b>Open Projects</b></paper-item>
                                 <div hidden$="{{hasProjects}}" class="flex-center flex-horizontal">[[noProjects]]</div>
                                 <template is="dom-repeat" items="[[_toOpenProjectArray(openProjects)]]" as="project" sort="_sortOpenProjects">
-                                    <paper-item on-click="_openProjectListClick" role="menuitem" class="flex-horizontal">
+                                    <paper-item on-click="_projectListClick" role="menuitem" class="flex-horizontal">
                                         <paper-item-body two-line class="flexchild">
                                             <div>[[project.value.name]]</div>
                                             <div secondary>[[project.value.startDate]]</div>
@@ -143,7 +143,7 @@
                                 </template>
                                 <paper-item><b>Closed Projects</b></paper-item>
                                 <template is="dom-repeat" items="[[_toArray(closedProjects)]]" as="project" sort="_sortOpenProjects">
-                                    <paper-item on-click="_openProjectListClick" role="menuitem" class="flex-horizontal">
+                                    <paper-item on-click="_projectListClick" role="menuitem" class="flex-horizontal">
                                         <paper-item-body two-line class="flexchild">
                                             <div>[[project.value.name]]</div>
                                             <div secondary>[[project.value.startDate]]</div>
@@ -186,7 +186,11 @@ Polymer({
             type: String,
             notify: true
         },
-        clickedStudent: {
+        clickedstudent: {
+            type: String,
+            notify: true
+        },
+        clickedproject: {
             type: String,
             notify: true
         },
@@ -215,6 +219,12 @@ Polymer({
                     }, {
                         name: 'fade-in-animation',
                         node: this.$.studentList,
+                        timing: {
+                            delay: 500
+                        }
+                    }, {
+                        name: 'fade-in-animation',
+                        node: this.$.projectList,
                         timing: {
                             delay: 500
                         }
@@ -254,17 +264,12 @@ Polymer({
     },
     _studentClick: function(e) {
         this.clickedStudentInfo = e.model.__data__.student.value;
-        this.clickedStudent = e.model.__data__.student.name;
+        this.clickedstudent = e.model.__data__.student.name;
         this.studentIsSelected = true;
     },
-    _viewProjects: function() {
-        console.log("You clicked View Projects");
-    },
-    _manageStudent: function() {
-        console.log("You clicked Manage Student.");
-    },
-    _generateTrans: function() {
-        console.log("You clicked Generate Transcript.");
+    _projectListClick: function(e) {
+        this.clickedproject = e.model.__data__.project.value;
+        this.fire("advisor-overview-project-click");
     },
     _alphabetizeStudents: function(a, b) {
         // alphabetizes based on last name, reliant on username schema of "n chars of last name, n chars of first name"

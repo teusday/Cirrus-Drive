@@ -1,2 +1,6 @@
 
 .DS_Store
+
+manifest.json
+
+npm-debug.log

@@ -32,8 +32,8 @@
     <link rel="import" href="bower_components/berry-new-project/berry-new-project.html">
     <!--berry advisor page-->
     <link rel="import" href="bower_components/berry-advisor-page/berry-advisor-page.html">
-	<!--berry student overview page-->
-	<link rel="import" href="bower_components/berry-student-overview-page/berry-student-overview-page.html">
+    <!--berry student overview page-->
+    <link rel="import" href="bower_components/berry-student-overview-page/berry-student-overview-page.html">
     <style is="custom-style">
     :root {
         --primary-color: #03A9F4;
@@ -47,7 +47,7 @@
         <h2 class="title">Cirrus Drive</h2>
         <neon-animated-pages id="mainPages" selected="[[indexSelect]]">
             <berry-login id="berry-login" on-login-successful="_loginSuccessful" user="{{user}}"></berry-login>
-            <berry-circles id="berry-circles-page" user="{{user}}" on-circle-click="_circleClick" on-sign-out="_signOut"></berry-circles>
+            <berry-circles id="berry-circles-page" user="{{user}}" on-circle-click="_circleClick" user-is-advisor="{{userIsAdvisor}}" on-sign-out="_signOut"></berry-circles>
             <berry-open-close-page id="berry-open-close-page" on-back-click="_backClick" on-open-projects-click="_openProjectsClick" on-closed-projects-click="_closedProjectsClick" on-requested-projects-click="_requestedProjectsClick" on-new-project-click="_newProjectClick"></berry-open-close-page>
             <berry-message-page id="berry-message-page" user="{{user}}" on-back-click="_backClick"></berry-message-page>
             <berry-open-projects id="berry-open-projects" user="{{user}}" on-open-project-back-click="_openProjectsBackClick" on-open-project-list-click="_openProjectListClick" clickedproject="{{clickedProject}}"></berry-open-projects>
@@ -55,7 +55,7 @@
             <berry-requested-projects id="berry-requested-projects" user="{{user}}" clickedproject="{{clickedProject}}" on-requested-project-back-click="_requestedProjectsBackClick" on-requested-project-list-click="_requestedProjectListClick"></berry-requested-projects>
             <berry-new-project id="berry-new-project" user="{{user}}" on-new-project-back-click="_newProjectBackClick"></berry-new-project>
             <berry-advisor-page id="berry-advisor-page" user="{{user}}" on-back-click="_backClick" on-student-overview-click="_studentOverviewSquareClick"></berry-advisor-page>
-        	<berry-student-overview-page id="berry-student-overview-page" user="{{user}}" on-back-click="_studentOverviewBackClick"></berry-student-overview-page>
+            <berry-student-overview-page id="berry-student-overview-page" user="{{user}}" on-back-click="_studentOverviewBackClick" on-advisor-overview-project-click="_advisorOverviewProjectClick" clickedproject="{{clickedProject}}"></berry-student-overview-page>
         </neon-animated-pages>
     </template>
     <script>
@@ -139,8 +139,15 @@
         scope.indexSelect = 5;
     };
     scope._projectPageBackClick = function() {
-        console.log(scope.clickedProject);
-        if (scope.clickedProject.status == "open") {
+        if (scope.userIsAdvisor) {
+            var studentOverviewPage = document.getElementById('berry-student-overview-page');
+            studentOverviewPage.animationConfig['entry'][1] = {
+                name: 'transform-animation',
+                transformFrom: 'translateY(100vh)',
+                node: studentOverviewPage.$.studentPinkContainer
+            };
+            scope.indexSelect = 9;
+        } else if (scope.clickedProject.status == "open") {
             var openPage = document.getElementById('berry-open-projects');
             openPage.animationConfig['entry'][1] = {
                 name: 'transform-animation',
@@ -206,15 +213,24 @@
         scope.indexSelect = 2;
     };
     scope._studentOverviewSquareClick = function() {
+        var studentOverviewPage = document.getElementById('berry-student-overview-page');
+        studentOverviewPage.animationConfig['entry'][1] = {
+            name: 'hero-animation',
+            id: 'studentOverviewHero',
+            toPage: studentOverviewPage
+        };
         scope.indexSelect = 9;
     };
     scope._studentOverviewBackClick = function() {
-    	var advisorPage = document.getElementById('berry-advisor-page');
-    	advisorPage.animationConfig['entry'][0] = {
+        var advisorPage = document.getElementById('berry-advisor-page');
+        advisorPage.animationConfig['entry'][0] = {
             name: 'slide-from-top-animation',
             node: advisorPage.$$('#projectHeader')
         }
-    	scope.indexSelect = 8;
+        scope.indexSelect = 8;
+    };
+    scope._advisorOverviewProjectClick = function() {
+        scope.indexSelect = 5;
     };
     scope._signOut = function() {
         var loginPage = document.getElementById('berry-login');

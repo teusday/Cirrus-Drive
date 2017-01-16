@@ -192,13 +192,6 @@ Polymer({
     _projectBackClick: function() {
         this.fire("project-page-back-click");
     },
-    _projectURL: function(projectstatus, projectid, property) {
-        if (property != null) {
-            return "https://cirrus-drive.firebaseio.com/users/berrste/projects/" + projectstatus + "/" + projectid + "/" + property;
-        } else {
-            return "https://cirrus-drive.firebaseio.com/users/berrste/projects/" + projectstatus + "/" + projectid;
-        }
-    },
     _subjectColor: function(subject) {
         switch(subject){
           case "english" : return "#F44336";

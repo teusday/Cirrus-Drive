@@ -191,8 +191,10 @@ Polymer({
         }
     },
     _sortRequestedProjects: function(a, b) {
-        // sorts projects alphabetically
-        //TODO sort
+      // sorts projects alphabetically
+      aProjectName = a.value.name.toLowerCase();
+      bProjectName = b.value.name.toLowerCase();
+      return aProjectName.charCodeAt(0)-bProjectName.charCodeAt(0);
     }
 });
 </script>

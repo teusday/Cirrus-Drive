@@ -94,8 +94,8 @@
                 <div id="requestedProjectContent">
                     <div id="requestedProjectPinkContainer">
                         <paper-listbox id="requestedProjectList">
-                            <template is="dom-repeat" items="[[_toArray(requestedProjects)]]" as="project" sort="_sortRequestedProjects">
                             <div hidden$="{{hasProjects}}" class="flex-center flex-horizontal">[[noProjects]]</div>
+                            <template is="dom-repeat" items="[[_toArray(requestedProjects)]]" as="project" sort="_sortRequestedProjects">
                                 <paper-item on-click="_requestedProjectListClick" role="menuitem" class="flex-horizontal">
                                     <paper-item-body two-line class="flexchild">
                                         <div>[[project.value.name]]</div>
@@ -123,7 +123,8 @@ Polymer({
             notify: true
         },
         hasProjects: {
-          type: Boolean
+          type: Boolean,
+          computed: "_hasProjects(requestedProjects)"
         },
         requestedProjects: {
             type: Array
@@ -181,8 +182,10 @@ Polymer({
         this.clickedproject = e.model.__data__.project.value;
         this.fire("requested-project-list-click");
     },
+    _hasProjects: function (obj){
+      return obj.length!=undefined;
+    },
     _toArray: function(obj) {
-        this.hasProjects = obj.length!=undefined;
         if (!this.$.getRequestedProjects.valueIsEmpty(obj)) {
             return Object.keys(obj).map(function(key) {
                 return {

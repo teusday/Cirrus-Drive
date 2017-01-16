@@ -10,32 +10,32 @@
 <link rel="import" href="../paper-button/paper-button.html">
 <link rel="import" href="../polymerfire/polymerfire.html">
 <dom-module id="berry-student-overview-page">
-<style>
-.flex-horizontal {
+    <style>
+    .flex-horizontal {
         @apply(--layout-horizontal);
     }
-
+    
     .flexchild {
         @apply(--layout-flex);
     }
-
+    
     .flex-center {
         @apply(--layout-center-center);
     }
-
+    
     #backButton {
         position: absolute;
         left: 10px;
         top: 10px;
         color: #FFFFFF;
     }
-
+    
     #messageFab {
         position: absolute;
         right: 50px;
         bottom: -20px;
     }
-
+    
     .paper-header {
         position: fixed;
         left: 0px;
@@ -47,7 +47,7 @@
         font-weight: bold;
         color: white;
     }
-
+    
     .container {
         position: fixed;
         top: 200px;
@@ -57,7 +57,7 @@
         padding: 20px;
         overflow-y: auto;
     }
-
+    
     #studentContent {
         position: absolute;
         left: 0px;
@@ -66,7 +66,7 @@
         @apply(--layout-horizontal);
         @apply(--layout-center-center);
     }
-
+    
     #studentPinkContainer {
         color: white;
         background-color: var(--accent-color);
@@ -75,91 +75,133 @@
         height: 100%;
         margin: 10px;
     }
-
+    
     #studentPinkContainer paper-listbox {
         margin: 10px;
+        width: 47.3%;
+        float: left;
     }
-
+    
     div[secondary] {
         font-size: 10pt;
         color: gray;
     }
-
+    
     paper-dialog {
         width: 50%;
     }
-
+    
     paper-dialog paper-button {
-    	color: white;
-    	background-color: var(--primary-color);
-    	height: 30px;
-    	margin-left: 25px;
+        color: white;
+        background-color: var(--primary-color);
+        height: 30px;
+        margin-left: 25px;
     }
-
+    
     paper-dialog img {
-    	height: 100px;
-    	width: 100px;
+        height: 100px;
+        width: 100px;
     }
-</style>
-
-<template>
-    <firebase-document id="getStudents" path="/users" data="{{students}}"></firebase-document>
-	<paper-header-panel mode="seamed">
-		<div class="paper-header flex-center flex-horizontal" id="studentOverviewHeader">
-			<paper-icon-button id="backButton" icon="arrow-back" on-click="_backClick"></paper-icon-button>
-			Student Overview
-		</div>
-		<div class="flex-center flex-horizontal container">
-			<div id="studentContent">
-				<div id="studentPinkContainer">
-					<paper-listbox id="studentList">
-						<template is="dom-repeat" items="[[_toArray(students)]]" as="student" sort="_alphabetizeStudents">
-							<!-- TODO sort alphabeticly -->
-							<paper-item role="menuitem" class="flex-horizontal" on-click="_studentClick">
-								<paper-item-body class="flexchild">
-									<div>
-										[[student.value.fullName]]
-									</div>
-								</paper-item-body>
-								<iron-icon icon="info"></iron-icon>
-							</paper-item>
-						</template>
-					</paper-listbox>
-				</div>
-			</div>
-		</div>
-	</paper-header-panel>
-	<paper-dialog id="studentInfoDialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
-		<h2 class="flex-center">
-			<img src="[[clickedStudent.photoURL]]"/>
-			<p>[[clickedStudent.fullName]]</p>
-			<h4>Student Since: [[clickedStudent.studentSince]]</h4>
-			<h4>Username: [[clickedStudent.username]]</h4>
-			</h2>
-		<paper-button raised on-click="_viewProjects">View Projects</paper-button>
-		<paper-button raised on-click="_generateTrans">Generate Transcript</paper-button>
-		<paper-button raised on-click="_manageStudent">Manage Student</paper-button>
-	</paper-dialog>
-</template>
+    </style>
+    <template>
+        <firebase-document id="getStudents" path="/users" data="{{students}}"></firebase-document>
+        <firebase-document id="getProjects" path="/projects/[[clickedStudent]]/open" data="{{openProjects}}"></firebase-document>
+        <firebase-document id="getProjects" path="/projects/[[clickedStudent]]/closed" data="{{closedProjects}}"></firebase-document>
+        <paper-header-panel mode="seamed">
+            <div class="paper-header flex-center flex-horizontal" id="studentOverviewHeader">
+                <paper-icon-button id="backButton" icon="arrow-back" on-click="_backClick"></paper-icon-button>
+                Student Overview
+            </div>
+            <div class="flex-center flex-horizontal container">
+                <div id="studentContent">
+                    <div id="studentPinkContainer">
+                        <paper-listbox id="studentList">
+                            <template is="dom-repeat" items="[[_toArray(students)]]" as="student" sort="_alphabetizeStudents">
+                                <paper-item role="menuitem" class="flex-horizontal" on-click="_studentClick">
+                                    <paper-item-body class="flexchild">
+                                        <div>
+                                            [[student.value.fullName]]
+                                        </div>
+                                    </paper-item-body>
+                                    <iron-icon icon="info"></iron-icon>
+                                </paper-item>
+                            </template>
+                        </paper-listbox>
+                        <paper-listbox id="projectList">
+                            <div hidden$="{{studentIsSelected}}" class="flex-center flex-horizontal">Select a Student to View Their Projects</div>
+                            <div hidden$="{{!studentIsSelected}}">
+                                <paper-item><b>Open Projects</b></paper-item>
+                                <div hidden$="{{hasProjects}}" class="flex-center flex-horizontal">[[noProjects]]</div>
+                                <template is="dom-repeat" items="[[_toOpenProjectArray(openProjects)]]" as="project" sort="_sortOpenProjects">
+                                    <paper-item on-click="_openProjectListClick" role="menuitem" class="flex-horizontal">
+                                        <paper-item-body two-line class="flexchild">
+                                            <div>[[project.value.name]]</div>
+                                            <div secondary>[[project.value.startDate]]</div>
+                                        </paper-item-body>
+                                        <iron-icon icon="info"></iron-icon>
+                                    </paper-item>
+                                </template>
+                                <paper-item><b>Closed Projects</b></paper-item>
+                                <template is="dom-repeat" items="[[_toArray(closedProjects)]]" as="project" sort="_sortOpenProjects">
+                                    <paper-item on-click="_openProjectListClick" role="menuitem" class="flex-horizontal">
+                                        <paper-item-body two-line class="flexchild">
+                                            <div>[[project.value.name]]</div>
+                                            <div secondary>[[project.value.startDate]]</div>
+                                        </paper-item-body>
+                                        <iron-icon icon="info"></iron-icon>
+                                    </paper-item>
+                                </template>
+                            </div>
+                        </paper-listbox>
+                    </div>
+                </div>
+            </div>
+        </paper-header-panel>
+    </template>
 </dom-module>
 <script>
 Polymer({
-	is: "berry-student-overview-page",
-	behaviors: [
+    is: "berry-student-overview-page",
+    behaviors: [
         Polymer.NeonSharedElementAnimatableBehavior
     ],
     properties: {
-    	students: {
-    		type: Object
-    	},
-    	sharedElements: {
-    		value: function() {
-    			return {
-    				'studentOverviewHero' : this.$.studentPinkContainer
-    			}
-    		}
-    	},
-    	animationConfig: {
+        students: {
+            type: Object
+        },
+        openProjects: {
+            type: Array
+        },
+        closedProjects: {
+            type: Array
+        },
+        hasProjects: {
+            type: Boolean
+        },
+        studentIsSelected: {
+            type: Boolean,
+            value: false
+        },
+        clickedStudentInfo: {
+            type: String,
+            notify: true
+        },
+        clickedStudent: {
+            type: String,
+            notify: true
+        },
+        noProjects: {
+            type: String,
+            value: 'This student does not have any projects open.'
+        },
+        sharedElements: {
+            value: function() {
+                return {
+                    'studentOverviewHero': this.$.studentPinkContainer
+                }
+            }
+        },
+        animationConfig: {
             type: Object,
             value: function() {
                 return {
@@ -190,7 +232,16 @@ Polymer({
             }
         }
     },
-	_toArray: function(s) {
+    _toArray: function(s) {
+        return Object.keys(s).map(function(key) {
+            return {
+                name: key,
+                value: s[key]
+            };
+        });
+    },
+    _toOpenProjectArray: function(s) {
+        this.hasProjects = s.length != undefined;
         return Object.keys(s).map(function(key) {
             return {
                 name: key,
@@ -202,25 +253,35 @@ Polymer({
         this.fire("back-click");
     },
     _studentClick: function(e) {
-    	this.clickedStudent = e.model.__data__.student.value;
-    	this.$.studentInfoDialog.open();
+        this.clickedStudentInfo = e.model.__data__.student.value;
+        this.clickedStudent = e.model.__data__.student.name;
+        this.studentIsSelected = true;
+    },
+    _viewProjects: function() {
+        console.log("You clicked View Projects");
     },
     _manageStudent: function() {
-    	console.log("You clicked Manage Student.");
+        console.log("You clicked Manage Student.");
     },
     _generateTrans: function() {
-    	console.log("You clicked Generate Transcript.");
+        console.log("You clicked Generate Transcript.");
     },
     _alphabetizeStudents: function(a, b) {
-      // alphabetizes based on last name, reliant on username schema of "n chars of last name, n chars of first name"
-      /*
-      if this ever breaks, it's because the username format changed
-      you're gonna have to separate out the last and first names, sort by last, and compute fullName
-      sorry dude
-      */
-      aName = a.value.username.toLowerCase();
-      bName = b.value.username.toLowerCase();
-      return aName<bName?-1:1;
+        // alphabetizes based on last name, reliant on username schema of "n chars of last name, n chars of first name"
+        /*
+        if this ever breaks, it's because the username format changed
+        you're gonna have to separate out the last and first names, sort by last, and compute fullName
+        sorry dude
+        */
+        aName = a.value.username.toLowerCase();
+        bName = b.value.username.toLowerCase();
+        return aName < bName ? -1 : 1;
+    },
+    _sortOpenProjects: function(a, b) {
+        // sorts projects alphabetically
+        aProjectName = a.value.name.toLowerCase();
+        bProjectName = b.value.name.toLowerCase();
+        return aProjectName < bProjectName ? -1 : 1;
     }
 });
 </script>

@@ -61,14 +61,21 @@
             @apply(--layout-vertical);
             @apply(--layout-center-center);
         }
+        @media (max-width: 768px) {
+            /* For mobile: */
+            #squareBox {
+                @apply(--layout-vertical);
+            }
+        }
     </style>
     <template>
         <firebase-document id="isAdvisor" path="/users/[[user.uid]]/advisor" data="{{userIsAdvisor}}"></firebase-document>
         <template is="dom-if" if="{{userIsAdvisor}}">
             <paper-header-panel mode="seamed">
                 <div class="paper-header flex-center flex-horizontal" id="projectHeader">
-                    <paper-icon-button id="backButton" icon="arrow-back" on-click="_backClick"></paper-icon-button>Advisor Panel</div>
-                <div class="flex-center flex-horizontal container">
+                    <paper-icon-button id="backButton" icon="arrow-back" on-click="_backClick"></paper-icon-button>
+                    Advisor Panel</div>
+                <div class="flex-center flex-horizontal container" id="squareBox">
                     <div class="square" id="studentOverviewSquare" on-click="_studentOverviewSquareClick">
                         <iron-icon icon="supervisor-account"></iron-icon>
                         <br>Student Overview

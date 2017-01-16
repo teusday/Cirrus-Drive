@@ -82,6 +82,7 @@
         font-size: 10pt;
         color: gray;
     }
+
     </style>
     <template>
         <firebase-document id="getOpenProjects" path="/projects/[[user.uid]]/open" data="{{openProjects}}"></firebase-document>
@@ -94,6 +95,7 @@
                 <div id="openProjectContent">
                     <div id="openProjectPinkContainer">
                         <paper-listbox id="openProjectList">
+                              <div hidden$="{{hasProjects}}" class="flex-center flex-horizontal">[[noProjects]]</div>
                             <template is="dom-repeat" items="[[_toArray(openProjects)]]" as="project" sort="_sortOpenProjects">
                                 <paper-item on-click="_openProjectListClick" role="menuitem" class="flex-horizontal">
                                     <paper-item-body two-line class="flexchild">
@@ -121,12 +123,19 @@ Polymer({
             type: Object,
             notify: true
         },
+        hasProjects: {
+          type: Boolean,
+        },
         openProjects: {
             type: Array
         },
         clickedproject: {
             type: String,
             notify: true
+        },
+        noProjects: {
+          type: String,
+          value: 'No projects open at this time. Why not open one up?'
         },
         sharedElements: {
             value: function() {
@@ -164,8 +173,8 @@ Polymer({
                     }]
                 }
             }
-        }
-    },
+        },
+      },
     _openProjectBackClick: function() {
         this.fire("open-project-back-click");
     },
@@ -174,6 +183,7 @@ Polymer({
         this.fire("open-project-list-click");
     },
     _toArray: function(obj) {
+        this.hasProjects = obj.length!=undefined;
         return Object.keys(obj).map(function(key) {
             return {
                 name: key,

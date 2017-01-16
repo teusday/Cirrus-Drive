@@ -9,38 +9,45 @@
 <link rel="import" href="../polymerfire/polymerfire.html">
 <dom-module id="berry-circles">
     <style>
-    :host {
-        height: 500px;
-    }
-    
-    #circleBox {
-        @apply(--layout-fit);
-        @apply(--layout-horizontal);
-        @apply(--layout-center-center);
-    }
-    
-    .circle {
-        display: inline-block;
-        width: 100px;
-        height: 100px;
-        margin: 16px;
-        border-radius: 50%;
-        background: var(--primary-color);
-        color: #FFFFFF;
-        text-align: center;
-        padding: 1%;
-    }
-    
-    .circle iron-icon {
-        padding-top: 18%;
-    }
-    
-    #signOutButton {
-        color: var(--primary-color);
-        position: fixed;
-        top: 40px;
-        right: 40px;
-    }
+         :host {
+            height: 500px;
+        }
+
+        #circleBox {
+            @apply(--layout-fit);
+            @apply(--layout-horizontal);
+            @apply(--layout-center-center);
+        }
+
+        .circle {
+            display: inline-block;
+            width: 100px;
+            height: 100px;
+            margin: 16px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: #FFFFFF;
+            text-align: center;
+            padding: 1%;
+        }
+
+        .circle iron-icon {
+            padding-top: 18%;
+        }
+
+        #signOutButton {
+            color: var(--primary-color);
+            position: fixed;
+            top: 40px;
+            right: 40px;
+        }
+
+        @media (max-width: 768px) {
+            /* For mobile: */
+            #circleBox {
+                @apply(--layout-vertical);
+            }
+        }
     </style>
     <template>
         <firebase-document id="isAdvisor" path="/users/[[user.uid]]/advisor" data="{{userIsAdvisor}}"></firebase-document>
@@ -66,93 +73,93 @@
     </template>
 </dom-module>
 <script>
-Polymer({
-    is: "berry-circles",
-    behaviors: [
-        Polymer.NeonSharedElementAnimatableBehavior,
-        Polymer.NeonAnimatableBehavior,
-        Polymer.NeonAnimationRunnerBehavior
-    ],
-    properties: {
-        animationConfig: {
-            type: Object,
-            value: function() {
-                var circles = Polymer.dom(this.root).querySelectorAll('.circle');
-                var circlesArray = Array.prototype.slice.call(circles);
-                return {
-                    'entry': [{
-                        name: 'cascaded-animation',
-                        animation: 'scale-up-animation',
-                        nodes: circlesArray,
-                        timing: {
-                            delay: 200
-                        }
-                    }, {
-                        name: 'fade-in-animation',
-                        node: this.$.signOutButton,
-                        timing: {
-                            delay: 1000
-                        }
-                    }],
-                    'exit': [{
-                        name: 'hero-animation',
-                        id: 'hero',
-                        fromPage: this
-                    }, {
-                        name: 'cascaded-animation',
-                        animation: 'scale-down-animation'
-                    }]
+    Polymer({
+        is: "berry-circles",
+        behaviors: [
+            Polymer.NeonSharedElementAnimatableBehavior,
+            Polymer.NeonAnimatableBehavior,
+            Polymer.NeonAnimationRunnerBehavior
+        ],
+        properties: {
+            animationConfig: {
+                type: Object,
+                value: function() {
+                    var circles = Polymer.dom(this.root).querySelectorAll('.circle');
+                    var circlesArray = Array.prototype.slice.call(circles);
+                    return {
+                        'entry': [{
+                            name: 'cascaded-animation',
+                            animation: 'scale-up-animation',
+                            nodes: circlesArray,
+                            timing: {
+                                delay: 200
+                            }
+                        }, {
+                            name: 'fade-in-animation',
+                            node: this.$.signOutButton,
+                            timing: {
+                                delay: 1000
+                            }
+                        }],
+                        'exit': [{
+                            name: 'hero-animation',
+                            id: 'hero',
+                            fromPage: this
+                        }, {
+                            name: 'cascaded-animation',
+                            animation: 'scale-down-animation'
+                        }]
+                    }
+                }
+            },
+            userIsAdvisor: {
+                type: Boolean,
+                value: false
+            },
+            user: {
+                type: Object,
+                notify: true
+            }
+        },
+        _projectsClick: function() {
+            this._assignAnimationToCircle(this.$.projectCircle);
+            this.fire("circle-click", {
+                pageId: "project"
+            });
+        },
+        _messagesClick: function() {
+            this._assignAnimationToCircle(this.$.messageCircle);
+            this.fire("circle-click", {
+                pageId: "message"
+            });
+        },
+        _tasksClick: function() {
+            this._assignAnimationToCircle(this.$.taskCircle);
+            this.fire("circle-click", {
+                pageId: "task"
+            });
+        },
+        _advisorClick: function() {
+            this._assignAnimationToCircle(this.$$('#advisorCircle'));
+            this.fire("circle-click", {
+                pageId: "advisor"
+            });
+        },
+        _assignAnimationToCircle: function(target) {
+            var nodesToScale = [];
+            this.sharedElements = {
+                'hero': target
+            };
+            var circles = Polymer.dom(this.root).querySelectorAll('.circle');
+            for (var i = circles.length - 1; i >= 0; i--) {
+                if (circles[i] != target) {
+                    nodesToScale.push(circles[i]);
                 }
             }
+            this.animationConfig['exit'][1].nodes = nodesToScale;
         },
-        userIsAdvisor: {
-            type: Boolean,
-            value: false
-        },
-        user: {
-            type: Object,
-            notify: true
+        _signOut: function() {
+            this.fire("sign-out");
         }
-    },
-    _projectsClick: function() {
-        this._assignAnimationToCircle(this.$.projectCircle);
-        this.fire("circle-click", {
-            pageId: "project"
-        });
-    },
-    _messagesClick: function() {
-        this._assignAnimationToCircle(this.$.messageCircle);
-        this.fire("circle-click", {
-            pageId: "message"
-        });
-    },
-    _tasksClick: function() {
-        this._assignAnimationToCircle(this.$.taskCircle);
-        this.fire("circle-click", {
-            pageId: "task"
-        });
-    },
-    _advisorClick: function() {
-        this._assignAnimationToCircle(this.$$('#advisorCircle'));
-        this.fire("circle-click", {
-            pageId: "advisor"
-        });
-    },
-    _assignAnimationToCircle: function(target) {
-        var nodesToScale = [];
-        this.sharedElements = {
-            'hero': target
-        };
-        var circles = Polymer.dom(this.root).querySelectorAll('.circle');
-        for (var i = circles.length - 1; i >= 0; i--) {
-            if (circles[i] != target) {
-                nodesToScale.push(circles[i]);
-            }
-        }
-        this.animationConfig['exit'][1].nodes = nodesToScale;
-    },
-    _signOut: function() {
-        this.fire("sign-out");
-    }
-});
+    });
 </script>

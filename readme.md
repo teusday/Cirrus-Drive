@@ -33,7 +33,7 @@
   - **page to look at project requests**
   - change advisor icon back to something less mean (eventually)
 - **Sort lists**
-  - sort open/closed/requested projects lists
+  - **sort open/closed/requested projects lists**
   - **sort students list** - needs further testing
 - Connect to Google Drive
 - Set up routing, so a browser back takes you back

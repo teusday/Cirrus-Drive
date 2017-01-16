@@ -1,5 +1,5 @@
 <link rel="import" href="../polymer/polymer.html">
-<script src="bower_components/jspdf/dist/jspdf.debug.js"></script>
+<script src="../jspdf/dist/jspdf.debug.js"></script>
 
 <!--
 `sa-pdf-gen`
@@ -18,14 +18,14 @@ Generates pdf
         student: {
           type: String,
           value: 'error',
-          listeners: '_studentChanged()',
+          notify: 'true',
+          observer: '_studentChanged',
         },
       },
 
-      generateTranscript: function(obj) {
+      generate: function() {
         console.log("This is where you would get a transcript, if I had one to give.");
         console.log(student);
-        console.log(obj);
       },
       _studentChanged: function() {
         console.log("Student changed.");

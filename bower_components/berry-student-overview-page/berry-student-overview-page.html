@@ -9,7 +9,7 @@
 <link rel="import" href="../paper-header-panel/paper-header-panel.html">
 <link rel="import" href="../paper-button/paper-button.html">
 <link rel="import" href="../polymerfire/polymerfire.html">
-<link rel="import" href="../../src/sa-transcript-pdf/sa-transcript-pdf.html">
+<link rel="import" href="../sa-transcript-pdf/sa-transcript-pdf.html">
 <dom-module id="berry-student-overview-page">
     <style>
       .flex-horizontal {
@@ -118,6 +118,7 @@
             <div class="flex-center flex-horizontal container">
                 <div id="studentContent">
                     <div id="studentPinkContainer">
+                        <paper-button id="generate" on-click="_generateTrans">Generate Transcript</paper-button>
                         <paper-listbox id="studentList">
                             <template is="dom-repeat" items="[[_toArray(students)]]" as="student" sort="_alphabetizeStudents">
                                 <paper-item role="menuitem" class="flex-horizontal" on-click="_studentClick">
@@ -265,7 +266,7 @@ Polymer({
     },
     _generateTrans: function() {
         console.log("You clicked Generate Transcript.");
-        transcriptGen.generateTranscript(clickedStudent);
+        transcriptGen.generate(this.clickedStudent);
     },
     _alphabetizeStudents: function(a, b) {
         // alphabetizes based on last name, reliant on username schema of "n chars of last name, n chars of first name"

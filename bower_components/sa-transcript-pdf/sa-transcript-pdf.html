@@ -1,0 +1,36 @@
+<link rel="import" href="../polymer/polymer.html">
+<script src="bower_components/jspdf/dist/jspdf.debug.js"></script>
+
+<!--
+`sa-pdf-gen`
+Generates pdf
+
+@demo demo/index.html
+-->
+
+<dom-module id="sa-transcript-pdf">
+  <script>
+    Polymer({
+
+      is: 'sa-pdf-gen',
+
+      properties: {
+        student: {
+          type: String,
+          value: 'error',
+          listeners: '_studentChanged()',
+        },
+      },
+
+      generateTranscript: function(obj) {
+        console.log("This is where you would get a transcript, if I had one to give.");
+        console.log(student);
+        console.log(obj);
+      },
+      _studentChanged: function() {
+        console.log("Student changed.");
+      }
+
+    });
+  </script>
+</dom-module>

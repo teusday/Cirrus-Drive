@@ -18,22 +18,22 @@
     .flex-horizontal {
         @apply(--layout-horizontal);
     }
-    
+
     .flexchild {
         @apply(--layout-flex);
     }
-    
+
     .flex-center {
         @apply(--layout-center-center);
     }
-    
+
     #backButton {
         position: absolute;
         left: 10px;
         top: 10px;
         color: #FFFFFF;
     }
-    
+
     .paper-header {
         position: fixed;
         left: 0px;
@@ -45,7 +45,7 @@
         font-weight: bold;
         color: white;
     }
-    
+
     .container {
         position: fixed;
         top: 200px;
@@ -55,7 +55,7 @@
         padding: 20px;
         overflow-y: auto;
     }
-    
+
     #openProjectContent {
         position: absolute;
         left: 0px;
@@ -64,7 +64,7 @@
         @apply(--layout-horizontal);
         @apply(--layout-center-center);
     }
-    
+
     #openProjectPinkContainer {
         color: white;
         background-color: var(--accent-color);
@@ -73,15 +73,16 @@
         height: 100%;
         margin: 10px;
     }
-    
+
     #openProjectPinkContainer paper-listbox {
         margin: 10px;
     }
-    
+
     div[secondary] {
         font-size: 10pt;
         color: gray;
     }
+
     </style>
     <template>
         <firebase-document id="getOpenProjects" path="/projects/[[user.uid]]/open" data="{{openProjects}}"></firebase-document>
@@ -94,6 +95,7 @@
                 <div id="openProjectContent">
                     <div id="openProjectPinkContainer">
                         <paper-listbox id="openProjectList">
+                              <div hidden$="{{hasProjects}}" class="flex-center flex-horizontal">[[noProjects]]</div>
                             <template is="dom-repeat" items="[[_toArray(openProjects)]]" as="project" sort="_sortOpenProjects">
                                 <paper-item on-click="_openProjectListClick" role="menuitem" class="flex-horizontal">
                                     <paper-item-body two-line class="flexchild">
@@ -121,12 +123,19 @@ Polymer({
             type: Object,
             notify: true
         },
+        hasProjects: {
+          type: Boolean,
+        },
         openProjects: {
             type: Array
         },
         clickedproject: {
             type: String,
             notify: true
+        },
+        noProjects: {
+          type: String,
+          value: 'No projects open at this time. Why not open one up?'
         },
         sharedElements: {
             value: function() {
@@ -164,8 +173,8 @@ Polymer({
                     }]
                 }
             }
-        }
-    },
+        },
+      },
     _openProjectBackClick: function() {
         this.fire("open-project-back-click");
     },
@@ -174,6 +183,7 @@ Polymer({
         this.fire("open-project-list-click");
     },
     _toArray: function(obj) {
+        this.hasProjects = obj.length!=undefined;
         return Object.keys(obj).map(function(key) {
             return {
                 name: key,
@@ -182,7 +192,7 @@ Polymer({
         });
     },
     _sortOpenProjects: function(a, b) {
-        //sort
+        //TODO sort
     }
 });
 </script>

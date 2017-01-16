@@ -200,19 +200,13 @@ Polymer({
         }
     },
     _subjectColor: function(subject) {
-        // this should really be a switch
-        if (subject == "english") {
-            return "#F44336";
-        } else if (subject == "socialStudies") {
-            return "#FFEB3B";
-        } else if (subject == "science") {
-            return "#4CAF50";
-        } else if (subject == "math") {
-            return "#2196F3";
-        } else if (subject == "elective") {
-            return "#8460c5";
-        } else {
-            return "white";
+        switch(subject){
+          case "english" : return "#F44336";
+          case "socialStudies" : return "#FFEB3B";
+          case "science" : return "#4CAF50";
+          case "math" : return "#2196F3";
+          case "elective" : return "#8460c5";
+          default : return "white";
         }
     },
     _showStandardInfo: function(e) {

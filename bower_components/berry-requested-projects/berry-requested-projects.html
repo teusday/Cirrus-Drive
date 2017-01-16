@@ -18,22 +18,22 @@
     .flex-horizontal {
         @apply(--layout-horizontal);
     }
-    
+
     .flexchild {
         @apply(--layout-flex);
     }
-    
+
     .flex-center {
         @apply(--layout-center-center);
     }
-    
+
     #backButton {
         position: absolute;
         left: 10px;
         top: 10px;
         color: #FFFFFF;
     }
-    
+
     .paper-header {
         position: fixed;
         left: 0px;
@@ -45,7 +45,7 @@
         font-weight: bold;
         color: white;
     }
-    
+
     .container {
         position: fixed;
         top: 200px;
@@ -55,7 +55,7 @@
         padding: 20px;
         overflow-y: auto;
     }
-    
+
     #requestedProjectContent {
         position: absolute;
         left: 0px;
@@ -64,7 +64,7 @@
         @apply(--layout-horizontal);
         @apply(--layout-center-center);
     }
-    
+
     #requestedProjectPinkContainer {
         color: white;
         background-color: var(--accent-color);
@@ -73,11 +73,11 @@
         height: 100%;
         margin: 10px;
     }
-    
+
     #requestedProjectPinkContainer paper-listbox {
         margin: 10px;
     }
-    
+
     div[secondary] {
         font-size: 10pt;
         color: gray;
@@ -94,6 +94,7 @@
                 <div id="requestedProjectContent">
                     <div id="requestedProjectPinkContainer">
                         <paper-listbox id="requestedProjectList">
+                            <div hidden$="{{hasProjects}}" class="flex-center flex-horizontal">[[noProjects]]</div>
                             <template is="dom-repeat" items="[[_toArray(requestedProjects)]]" as="project" sort="_sortrequestedProjects">
                                 <paper-item on-click="_requestedProjectListClick" role="menuitem" class="flex-horizontal">
                                     <paper-item-body two-line class="flexchild">
@@ -121,12 +122,19 @@ Polymer({
             type: Object,
             notify: true
         },
+        hasProjects: {
+          type: Boolean
+        },
         requestedProjects: {
             type: Array
         },
         clickedproject: {
             type: String,
             notify: true
+        },
+        noProjects: {
+          type: String,
+          value: 'You don\'t have any pending requests.'
         },
         sharedElements: {
             value: function() {
@@ -174,6 +182,7 @@ Polymer({
         this.fire("requested-project-list-click");
     },
     _toArray: function(obj) {
+        this.hasProjects = obj.length!=undefined;
         if (!this.$.getRequestedProjects.valueIsEmpty(obj)) {
             return Object.keys(obj).map(function(key) {
                 return {
@@ -185,6 +194,7 @@ Polymer({
             return null;
         }
     },
+    //!Is this necessary? Looks like a holdover from berry-new-project
     _toShallowArray: function(obj) {
         if (!this.$.getRequestedProjects.valueIsEmpty(obj)) {
             return Object.keys(obj);

@@ -13,22 +13,22 @@
     .flex-horizontal {
         @apply(--layout-horizontal);
     }
-    
+
     .flexchild {
         @apply(--layout-flex);
     }
-    
+
     .flex-center {
         @apply(--layout-center-center);
     }
-    
+
     #backButton {
         position: absolute;
         left: 10px;
         top: 10px;
         color: #FFFFFF;
     }
-    
+
     #projectFab {
         position: absolute;
         right: 50px;
@@ -46,7 +46,7 @@
         font-weight: bold;
         color: white;
     }
-    
+
     .container {
         position: fixed;
         top: 200px;
@@ -56,7 +56,7 @@
         padding: 20px;
         overflow-y: auto;
     }
-    
+
     .square {
         width: 150px;
         height: 150px;
@@ -67,6 +67,13 @@
         @apply(--layout-vertical);
         @apply(--layout-center-center);
     }
+
+    @media (max-width: 768px) {
+        /* For mobile: */
+        #squareBox {
+            @apply(--layout-vertical);
+        }
+    }
     </style>
     <template>
         <paper-header-panel mode="seamed">
@@ -75,7 +82,7 @@
                 <paper-fab mini id="projectFab" icon="add" title="add" on-click="_openNewProjectPage"></paper-fab>
                 Projects
             </div>
-            <div class="flex-center flex-horizontal container">
+            <div class="flex-center flex-horizontal container" id = "squareBox">
                 <div class="square" id="openProjectsSquare" on-click="_openProjectSquareClick">
                     <iron-icon icon="assignment"></iron-icon>
                     <br>Open Projects

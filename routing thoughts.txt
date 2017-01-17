@@ -1,0 +1,16 @@
+cirrus.drive/login              - loginPage
+cirrus.drive/home               - circles
+
+cirrus.drive/projects           - openClosePage
+cirrus.drive/projects/open      - open projects
+cirrus.drive/projects/requested - requested projects
+cirrus.drive/projects/new       - project request form
+cirrus.drive/projects/[pid]     - project view of project[pid]
+
+cirrus.drive/messages           - messages view
+
+cirrus.drive/advisor            - advisor page
+cirrus.drive/advisor/students   - students overview
+cirrus.drive/advisor/requests   - advisor request view
+
+cirrus.drive/task               - task view, I guess

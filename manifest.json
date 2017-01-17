@@ -1,0 +1,7 @@
+{
+  "name": "Cirrus-Drive",
+  "short_name": "Cirrus-Drive",
+  "description": "In progress replacement for Project Foundry",
+  "start_url": "/",
+  "display": "standalone"
+}

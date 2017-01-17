@@ -1,44 +1,38 @@
-# ReadMe
-## Or don't, whatever.
+# \<Cirrus-Drive\>
 
-###To-Do:
-**Bold = currently working on**
+In progress replacement for Project Foundry
 
-- [x] Change all the headers to paper-headers
-- [x]  Messages
-  - [x] make reply work
-  - [x] create _new message_ button
-  - [x] create _new message_ screen
-  - [x] add error message
-  - [x] add button to delete message
-  - [ ] add _no messages_ screen
-- [ ] Projects
-  - [ ] make _closed projects_ page
-  - [ ] make button to submit, edit, and delete a project
-  - [x] make a _requested projects_ page
-  -	[x] make a _new project_ button
-  - [x] make a _new project_ screen
-  - [x] make a _no projects_ screen for all three categories
-- [ ] Task Page
-  - [ ] figure out what a task page needs
-- [ ] **Advisor Page**
-  - [x] make it so that the advisor circle shows up when you're an advisor
-  - [x] make the animations work with the advisor circle
-  - [ ] **make a student overview page**
-  	- [x] make it appear
-  	- [ ] **make it functional**
-  		- [x] make dialog boxes for student information
-  		- [ ] **generate transcripts**
-  		- [ ] **view projects**
-  		- [ ] **manage students**
-  - [ ] **page to look at project requests**
-  - [ ] change advisor icon back to something less mean (eventually)
-- [x] Sort lists
-  - [x] sort open/closed/requested projects lists
-  - [x] sort students list
-- [ ] Connect to Google Drive
-- [ ] Set up routing, so a browser back takes you back
-- [ ] **Mobile version could use work**
-  - [ ] **Fix sizing of squares**
-  - [ ] Fix Neon animations in mobile version
-  - [ ] **Make it scrollable**
+## Install the Polymer-CLI
+
+First, make sure you have the [Polymer CLI](https://www.npmjs.com/package/polymer-cli) installed. Then run `polymer serve` to serve your application locally.
+
+## Viewing Your Application
+
+```
+$ polymer serve
+```
+
+## Building Your Application
+
+```
+$ polymer build
+```
+
+This will create a `build/` folder with `bundled/` and `unbundled/` sub-folders
+containing a bundled (Vulcanized) and unbundled builds, both run through HTML,
+CSS, and JS optimizers.
+
+You can serve the built versions by giving `polymer serve` a folder to serve
+from:
+
+```
+$ polymer serve build/bundled
+```
+
+## Running Tests
+
+```
+$ polymer test
+```
+
+Your application is already set up to be tested via [web-component-tester](https://github.com/Polymer/web-component-tester). Run `polymer test` to run your application's test suite locally.
